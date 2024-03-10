@@ -1,0 +1,4 @@
+#Sun Mar 10 16:04:35 EDT 2024
+base.0=C\:\\Users\\Dylan\\Capstone\\songbird\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
+path.0=classes.dex
+renamed.0=classes.dex

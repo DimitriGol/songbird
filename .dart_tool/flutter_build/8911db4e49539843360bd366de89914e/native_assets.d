@@ -1,0 +1,1 @@
+ C:\\Users\\Dylan\\Capstone\\songbird\\.dart_tool\\flutter_build\\8911db4e49539843360bd366de89914e\\native_assets.yaml: 
