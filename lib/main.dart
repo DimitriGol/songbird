@@ -1,6 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-void main() {
+
+void main() async{
+
+
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: FirebaseOptions(
+      apiKey: "AIzaSyCnpukA1QmiQUOrblOzQmGJKUnWfhUF4n8",
+            appId: "1:942832082224:web:d595c4ea5dbac506cdfcf5",
+            messagingSenderId: "942832082224",
+            projectId: "songbird-84376"));
+  //await Firebase.initializeApp();
+
   runApp(const MyApp());
 }
 
