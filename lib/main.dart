@@ -1,3 +1,9 @@
+import 'dart:html';
+import 'package:songbird/pages/explore_page.dart';
+import 'package:songbird/pages/likes_page.dart';
+import 'package:songbird/pages/profile_page.dart';
+
+import 'pages/settings.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -11,7 +17,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
+      routes:{
+        '/':(context) => const MyHomePage(title: 'Songbird'),
+        '/settings':(context) => SettingsPage(),
+      },
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -28,10 +39,9 @@ class MyApp extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor:  Color.fromARGB(255, 230, 230, 72)),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
@@ -55,71 +65,65 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+  int currentIndex = 0;
+
+  final pages = [
+    LikesPage(),
+    ExplorePage(),
+    ProfilePage()
+  ];
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
+        backgroundColor:   Color.fromARGB(255, 230, 230, 72),
         title: Text(widget.title),
+        centerTitle: true,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.settings),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SettingsPage()),
+              );
+            },
+          ),
+        ],
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      body: pages[currentIndex],
+
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        //backgroundColor: const Color.fromARGB(255, 134, 130, 130),
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        iconSize: 40,
+        unselectedItemColor: Colors.black,
+        selectedItemColor:  Color.fromARGB(255, 230, 230, 72),
+        currentIndex: currentIndex,
+        onTap: (index) => setState(() => currentIndex = index),
+        items: [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.favorite),
+          label: 'Likes',
+          ),
+         
+          BottomNavigationBarItem(
+          icon: Icon(Icons.music_note),
+          label: 'Discover',
+          ),
+
+           BottomNavigationBarItem(
+          icon: Icon(Icons.account_circle),
+          label: 'Account',
+          ),
+
+
+      ],),
+
     );
   }
 }

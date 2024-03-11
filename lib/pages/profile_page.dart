@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-class ExplorePage extends StatefulWidget
+class ProfilePage extends StatefulWidget
 {
-   const ExplorePage({super.key});
+   const ProfilePage({super.key});
 
   @override
-  State<ExplorePage> createState() => _ExplorePageState();
+  State<ProfilePage> createState() => _ProfilePageState();
 }
 
 
-class _ExplorePageState extends State<ExplorePage> {
+class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -21,12 +21,13 @@ class _ExplorePageState extends State<ExplorePage> {
     return Scaffold(
 
 
+
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
-              'You are on the explore page!',
+              'You are on the profile page!',
             ),
           ],
         ),
