@@ -1,12 +1,27 @@
-import 'dart:html';
+//import 'dart:html';
 import 'package:songbird/pages/explore_page.dart';
 import 'package:songbird/pages/likes_page.dart';
 import 'package:songbird/pages/profile_page.dart';
-
+import 'package:songbird/pages/login.dart';
+import 'package:songbird/pages/signup.dart';
 import 'pages/settings.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-void main() {
+
+void main() async{
+
+
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: FirebaseOptions(
+      apiKey: "AIzaSyCnpukA1QmiQUOrblOzQmGJKUnWfhUF4n8",
+            appId: "1:942832082224:web:d595c4ea5dbac506cdfcf5",
+            messagingSenderId: "942832082224",
+            projectId: "songbird-84376"));
+  //await Firebase.initializeApp();
+
   runApp(const MyApp());
 }
 
@@ -20,8 +35,11 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       routes:{
-        '/':(context) => const MyHomePage(title: 'Songbird'),
+        '/':(context) => LoginPage(),
         '/settings':(context) => SettingsPage(),
+        '/home' : (context) => MyHomePage(title: 'Songbird'),
+        '/signup' :(context) => SignUpPage(),
+        '/login': (context) => LoginPage(),
       },
       theme: ThemeData(
         // This is the theme of your application.
