@@ -2,6 +2,16 @@
 
 A new Flutter project.
 
+## Steps To Properly Check Your Local Branch For Merge Conflicts
+
+Do these commands before making a pull request:
+- git checkout (your branch name here)
+- git fetch origin
+- git merge origin/main
+
+Afterwards, you should have the latest stuff from main branch. Handle any potential merge conflicts
+and then make your pull request.
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
