@@ -38,6 +38,9 @@ dependencies:
   firebase_auth: ^4.17.8
   firebase_core: ^2.27.0
 
+  # font awesome icons
+  font_awesome_flutter: ^9.1.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
