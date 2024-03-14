@@ -69,12 +69,12 @@ class _ProfilePageState extends State<ProfilePage> {
       children: [
         const SizedBox(height: 8),
         Text(
-          'Johnny Apppleseed',
+          'DJ Johnny Apppleseed',
           style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 2),
         Text(
-          'Description goes here',
+          'Artist',
           style: TextStyle(color: Colors.grey.shade700)
         ),
         const SizedBox(height: 20),
@@ -102,7 +102,7 @@ class _ProfilePageState extends State<ProfilePage> {
         color: Colors.transparent,
         child: InkWell(
           onTap: () {}, //does nothing at the moment
-          child: Center(child: Icon(icon, size: 30)),
+          child: Center(child: Icon(icon, size: 25)),
         ),
       ),
     );
