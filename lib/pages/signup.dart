@@ -4,19 +4,24 @@ import 'package:songbird/widgets/form_container_widget.dart';
 import '../firebase_auth/firebase_auth_class.dart';
 import 'login.dart';
 
+
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
+
 
   @override
   State<SignUpPage> createState() => _SignUpPageState();
 }
 
+
 class _SignUpPageState extends State<SignUpPage> {
   final FirebaseAuthService _auth = FirebaseAuthService();
+
 
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+
 
   @override
   void dispose() {
@@ -26,16 +31,20 @@ class _SignUpPageState extends State<SignUpPage> {
     super.dispose();
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("SignUp"),
-        ),
+      backgroundColor: Colors.grey,//PAGE COLOR
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Image.asset(
+                  'lib/images/songbird_black_logo_and_text.png',
+                  width: 280, // Adjust width according to your preference
+                  height: 120, // Adjust height according to your preference
+                ),
               Text(
                 "Sign Up",
                 style: TextStyle(fontSize: 27, fontWeight: FontWeight.bold),
@@ -72,17 +81,17 @@ class _SignUpPageState extends State<SignUpPage> {
                 child: GestureDetector(
                   onTap: _signUp,
                   child: Container(
-                      width: double.infinity,
+                      width: 250,
                       height: 45,
                       decoration: BoxDecoration(
-                        color: Colors.blue,
+                        color: Colors.yellow, //SIGN UP BUTTON COLOR
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Center(
                           child: Text(
                         "Sign Up",
                         style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
+                            color: Colors.black, fontWeight: FontWeight.bold),
                       ))),
                 ),
               ),
@@ -104,8 +113,9 @@ class _SignUpPageState extends State<SignUpPage> {
                     },
                     child: Text("Log In",
                         style: TextStyle(
-                          color: Colors.blue,
+                          color: Colors.yellow,
                           fontWeight: FontWeight.bold,
+                          //decoration: TextDecoration.underline,decorationColor: Colors.white, decorationThickness: 2 //THIS UNDERLINES LOG IN
                         )))
               ])
             ],
@@ -113,12 +123,15 @@ class _SignUpPageState extends State<SignUpPage> {
         ));
   }
 
+
   void _signUp() async {
     String username = _usernameController.text;
     String email = _emailController.text;
     String password = _passwordController.text;
 
+
     User? user = await _auth.signUpWithEmailAndPassword(email, password);
+
 
     if (user != null) {
       Navigator.pushNamed(context, "/home");
