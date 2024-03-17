@@ -11,6 +11,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 
+
 void main() async{
   await dotenv.load(fileName: "assets/.env");
 
@@ -58,7 +59,7 @@ class MyApp extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor:  Color.fromARGB(255, 230, 230, 72)),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.yellow),
         useMaterial3: true,
       ),
     );
@@ -88,7 +89,8 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor:   Color.fromARGB(255, 230, 230, 72),
+        automaticallyImplyLeading: false,
+        backgroundColor:   Colors.yellow,
         title: Text(widget.title),
         centerTitle: true,
         actions: <Widget>[
@@ -112,7 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
         showUnselectedLabels: false,
         iconSize: 40,
         unselectedItemColor: Colors.black,
-        selectedItemColor:  Color.fromARGB(255, 230, 230, 72),
+        selectedItemColor:   Colors.yellow,
         currentIndex: currentIndex,
         onTap: (index) => setState(() => currentIndex = index),
         items: [

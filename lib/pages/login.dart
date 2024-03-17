@@ -2,21 +2,27 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:songbird/widgets/form_container_widget.dart';
 
+
 import '../firebase_auth/firebase_auth_class.dart';
 import 'signup.dart';
 
+
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
+
 
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
 
+
 class _LoginPageState extends State<LoginPage> {
   final FirebaseAuthService _auth = FirebaseAuthService();
 
+
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+
 
   @override
   void dispose() {
@@ -25,16 +31,21 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Login"),
-        ),
-        body: Center(
+        backgroundColor: Colors.grey,//PAGE COLOR
+        body: 
+        Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Image.asset(
+                  'lib/images/songbird_black_logo_and_text.png',
+                  width: 280, // Adjust width according to your preference
+                  height: 120, // Adjust height according to your preference
+                ),
               Text(
                 "Login",
                 style: TextStyle(fontSize: 27, fontWeight: FontWeight.bold),
@@ -63,17 +74,17 @@ class _LoginPageState extends State<LoginPage> {
                 child: GestureDetector(
                   onTap: _signIn,
                   child: Container(
-                      width: double.infinity,
+                      width: 250,
                       height: 45,
                       decoration: BoxDecoration(
-                        color: Colors.blue,
+                        color: Colors.yellow,//LOGIN BUTTON COLOR
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Center(
                           child: Text(
                         "Login",
                         style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
+                            color: Colors.black, fontWeight: FontWeight.bold),
                       ))),
                 ),
               ),
@@ -95,7 +106,7 @@ class _LoginPageState extends State<LoginPage> {
                     },
                     child: Text("Sign Up",
                         style: TextStyle(
-                          color: Colors.blue,
+                          color: Colors.yellow,
                           fontWeight: FontWeight.bold,
                         )))
               ])
@@ -104,11 +115,14 @@ class _LoginPageState extends State<LoginPage> {
         ));
   }
 
+
   void _signIn() async {
     String email = _emailController.text;
     String password = _passwordController.text;
 
+
     User? user = await _auth.signInWithEmailAndPassword(email, password);
+
 
     if (user != null) {
       Navigator.pushNamed(context, "/home");

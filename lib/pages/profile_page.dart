@@ -96,6 +96,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
     Widget buildSocialIcon(IconData icon) => CircleAvatar(
       radius: 20,
+      backgroundColor: Colors.yellow,
       child: Material(
         shape: CircleBorder(),
         clipBehavior: Clip.hardEdge,
