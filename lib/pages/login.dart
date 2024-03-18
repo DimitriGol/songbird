@@ -127,8 +127,27 @@ class _LoginPageState extends State<LoginPage> {
 
     if (user != null) {
       Navigator.pushNamed(context, "/home");
-    } else {
-      print("Some error happened, user is null");
+    } else { //login error button
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Login Failed", textAlign: TextAlign.center,),
+            content: Text(
+              "The login was unsuccessful. Please check your credentials and try again.",
+              textAlign: TextAlign.center,
+              ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("OK"),
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 }
