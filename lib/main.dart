@@ -4,6 +4,7 @@ import 'package:songbird/pages/likes_page.dart';
 import 'package:songbird/pages/profile_page.dart';
 import 'package:songbird/pages/login.dart';
 import 'package:songbird/pages/signup.dart';
+import 'package:songbird/pages/splash_screen.dart';
 import 'pages/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -37,7 +38,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       routes:{
-        '/':(context) => LoginPage(),
+        '/':(context) => SplashScreen(),
         '/settings':(context) => SettingsPage(),
         '/home' : (context) => MyHomePage(title: 'Songbird'),
         '/signup' :(context) => SignUpPage(),
