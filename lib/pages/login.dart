@@ -1,10 +1,8 @@
-import 'dart:convert';
-import 'dart:html' as html; // Import dart:html for web-specific functionality
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:oauth2_client/access_token_response.dart';
+import 'package:oauth2_client/spotify_oauth2_client.dart';
 import 'package:songbird/widgets/form_container_widget.dart';
-
 import '../firebase_auth/firebase_auth_class.dart';
 import 'signup.dart';
 
@@ -17,8 +15,8 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final FirebaseAuthService _auth = FirebaseAuthService();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
 
   @override
   void dispose() {
@@ -30,7 +28,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey,
+      backgroundColor: Colors.grey, //PAGE COLOR
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -41,7 +39,7 @@ class _LoginPageState extends State<LoginPage> {
               height: 120,
             ),
             Text(
-              'Login',
+              "Login",
               style: TextStyle(fontSize: 27, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 30),
@@ -49,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
               padding: const EdgeInsets.all(8.0),
               child: FormContainerWidget(
                 controller: _emailController,
-                hintText: 'Email',
+                hintText: "Email",
                 isPasswordField: false,
               ),
             ),
@@ -57,7 +55,7 @@ class _LoginPageState extends State<LoginPage> {
               padding: const EdgeInsets.all(8.0),
               child: FormContainerWidget(
                 controller: _passwordController,
-                hintText: 'Password',
+                hintText: "Password",
                 isPasswordField: true,
               ),
             ),
@@ -69,28 +67,24 @@ class _LoginPageState extends State<LoginPage> {
                   width: 250,
                   height: 45,
                   decoration: BoxDecoration(
-                    color: Colors.yellow,
+                    color: Colors.yellow, //LOGIN BUTTON COLOR
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Center(
                     child: Text(
-                      'Login',
-                      style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                      "Login",
+                      style:
+                          TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
               ),
             ),
             SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _loginWithSpotify,
-              child: Text('Login with Spotify'),
-            ),
-            SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Don\'t have an account?'),
+                Text("Don't have an account?"),
                 SizedBox(width: 5),
                 GestureDetector(
                   onTap: () {
@@ -101,12 +95,14 @@ class _LoginPageState extends State<LoginPage> {
                     );
                   },
                   child: Text(
-                    'Sign Up',
+                    "Sign Up",
                     style: TextStyle(color: Colors.yellow, fontWeight: FontWeight.bold),
                   ),
-                )
+                ),
               ],
-            )
+            ),
+            SizedBox(height: 20),
+            SpotifyLoginButton(), // <-- Add Spotify login button here
           ],
         ),
       ),
@@ -117,24 +113,22 @@ class _LoginPageState extends State<LoginPage> {
     String email = _emailController.text;
     String password = _passwordController.text;
 
-    // Sign in user with Firebase Authentication
     User? user = await _auth.signInWithEmailAndPassword(email, password);
 
     if (user != null) {
-      // Navigate to home page
       Navigator.pushNamed(context, "/home");
     } else {
-      // Display login error dialog
+      //login error button
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text(
-              'Login Failed',
+              "Login Failed",
               textAlign: TextAlign.center,
             ),
             content: Text(
-              'The login was unsuccessful. Please check your credentials and try again.',
+              "The login was unsuccessful. Please check your credentials and try again.",
               textAlign: TextAlign.center,
             ),
             actions: [
@@ -142,7 +136,7 @@ class _LoginPageState extends State<LoginPage> {
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text('OK'),
+                child: Text("OK"),
               ),
             ],
           );
@@ -150,19 +144,66 @@ class _LoginPageState extends State<LoginPage> {
       );
     }
   }
+}
 
-  void _loginWithSpotify() {
-    final clientId = '25c17281eac544f7b24e184c57f9cd0e';
-    final redirectUri = 'https://www.google.com'; // Replace with your redirect URI
-    final List<String> scopes = ['user-read-private', 'user-read-email'];
+class SpotifyLoginButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: GestureDetector(
+        onTap: _loginToSpotify,
+        child: Container(
+          width: 250,
+          height: 45,
+          decoration: BoxDecoration(
+            color: Colors.green, // Spotify login button color
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Center(
+            child: Text(
+              "Login with Spotify",
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
-    final authorizationUrl =
-        'https://accounts.spotify.com/authorize?client_id=$clientId&redirect_uri=$redirectUri&scope=${scopes.join('%20')}&response_type=code';
+  void _loginToSpotify() async {
+    try {
+      await RemoteServices();
+      // Add any navigation or further action upon successful Spotify login
+    } catch (e) {
+      // Handle errors if any
+      print('Error logging in to Spotify: $e');
+      // You can show a snackbar or dialog to inform the user about the error.
+    }
+  }
 
-    // Open Spotify authorization page in a new tab/window
-    html.window.open(authorizationUrl, 'Spotify Login');
+  static Future<void> RemoteServices() async {
+    AccessTokenResponse? accessToken;
+    SpotifyOAuth2Client client = SpotifyOAuth2Client(
+        redirectUri: 'my.music.app://callback', customUriScheme: 'my.music.app');
+    var authResp = await client.requestAuthorization(
+        clientId: '25c17281eac544f7b24e184c57f9cd0e',
+        customParams: {'show_dialog': 'true'},
+        scopes: [
+          'user-read-private',
+          'user-read-playback-state',
+          'user-modify-playback-state',
+          'user-read-currently-playing',
+          'user-read-email'
+        ]);
+    var authCode = authResp.code;
 
-    // Print message indicating successful call to Spotify's Web API
-    print('Successfully initiated Spotify login process');
+    accessToken = await client.requestAccessToken(
+        code: authCode.toString(),
+        clientId: '25c17281eac544f7b24e184c57f9cd0e',
+        clientSecret: '1311979a68c347b2ba8879d6f898add5');
+
+    var Access_Token = accessToken.accessToken;
+    var Refresh_Token = accessToken.refreshToken;
   }
 }

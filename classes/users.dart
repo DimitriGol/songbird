@@ -35,23 +35,16 @@ class Artist extends Listener {
   String description;
 
   Artist({
-    required String uuid,
-    required String username,
-    required String displayName,
-    required String profilePicture,
-    required Map<String, dynamic>likedArtists,
-    required Map<Genres, int>tasteTracker,
+    required super.uuid,
+    required super.username,
+    required super.displayName,
+    required super.profilePicture,
+    required super.likedArtists,
+    required super.tasteTracker,
     required this.snippets,
     required this.spotifyLink,
     required this.appleMusicLink, 
     required this.youtubeLink,
     required this.description,
-  }) : super(
-      uuid: uuid,
-      username: username,
-      displayName: displayName,
-      profilePicture: profilePicture,
-      likedArtists: likedArtists,
-      tasteTracker: tasteTracker,
-    );
+  });
 } //Listener
