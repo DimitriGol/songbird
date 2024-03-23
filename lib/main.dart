@@ -11,7 +11,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-
+dynamic CURRENT_USER; //global variable to be assigned a user class later on in program flow
 
 void main() async{
   await dotenv.load(fileName: "assets/.env");
