@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:songbird/widgets/form_container_widget.dart';
-import 'package:spotify/spotify.dart' as swag;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:spotify/spotify.dart' as spotify_api;
 import 'dart:convert';
 
 
@@ -164,14 +165,21 @@ class _LoginPageState extends State<LoginPage> {
   }
 }
 
+Future main() async {
+  await dotenv.load(fileName: "assets/.env");
+}
+
 class YourClass {
-  late final swag.SpotifyApiCredentials credentials;
-  late final swag.SpotifyApi spotify;
+  late final spotify_api.SpotifyApiCredentials credentials;
+  late final spotify_api.SpotifyApi spotify;
 
   YourClass() {
-    credentials = swag.SpotifyApiCredentials('25c17281eac544f7b24e184c57f9cd0e', '1311979a68c347b2ba8879d6f898add5');
-    spotify = swag.SpotifyApi(credentials);
-    print('accessing yourclass');
+
+    String clientID = dotenv.env['CLIENT_ID']!;
+    String clientSecret = dotenv.env['CLIENT_SECRET']!;
+
+    credentials = spotify_api.SpotifyApiCredentials(clientID, clientSecret);
+    spotify = spotify_api.SpotifyApi(credentials);
   }
 
 Future<void> fetchArtist() async {
