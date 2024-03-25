@@ -1,6 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:songbird/widgets/form_container_widget.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:spotify/spotify.dart' as spotify_api;
+import 'dart:convert';
+
 
 
 import '../firebase_auth/firebase_auth_class.dart';
@@ -19,10 +23,19 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final FirebaseAuthService _auth = FirebaseAuthService();
+  late YourClass _yourClass;
 
 
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _yourClass = YourClass();
+    // Fetch artist information when LoginPage is initialized
+    _yourClass.fetchArtist();
+  }
 
 
   @override
@@ -36,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.grey,//PAGE COLOR
+        backgroundColor: Colors.blueGrey,//PAGE COLOR
         body: 
         Center(
           child: Column(
@@ -151,3 +164,31 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 }
+
+Future main() async {
+  await dotenv.load(fileName: "assets/.env");
+}
+
+class YourClass {
+  late final spotify_api.SpotifyApiCredentials credentials;
+  late final spotify_api.SpotifyApi spotify;
+
+  YourClass() {
+
+    String clientID = dotenv.env['CLIENT_ID']!;
+    String clientSecret = dotenv.env['CLIENT_SECRET']!;
+
+    credentials = spotify_api.SpotifyApiCredentials(clientID, clientSecret);
+    spotify = spotify_api.SpotifyApi(credentials);
+  }
+
+Future<void> fetchArtist() async {
+  try {
+    final artist = await spotify.artists.get('0OdUWJ0sBjDrqHygGUXeCF');
+    print('FETCHING ARTIST:  ');
+    print('Name: ${artist.name}');
+    print('Genres: ${artist.genres}');
+  } catch (e) {
+    print('Error fetching artist: $e');
+  }
+}}

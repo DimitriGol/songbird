@@ -37,7 +37,7 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey,//PAGE COLOR
+      backgroundColor: Colors.blueGrey,//PAGE COLOR
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
