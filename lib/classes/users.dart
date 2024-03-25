@@ -4,15 +4,15 @@
 enum Genres { classical, country, edm, hiphop, house, pop, rap, rnb, rock}
 
 // Listener
-class Listener {
+class BaseListener {
   final String uuid;
   String username;
   String displayName;
   String profilePicture;
   Map<String, dynamic> likedArtists;
-  Map<Genres, int> tasteTracker;
+  Map<String, int> tasteTracker;
 
-  Listener({
+  BaseListener({
     required this.uuid,
     required this.username,
     required this.displayName,
@@ -27,7 +27,7 @@ class Listener {
   }
 }
 
-class Artist extends Listener {
+class Artist extends BaseListener {
   List<String> snippets;
   String spotifyLink;
   String appleMusicLink;

@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:songbird/main.dart';
 import 'package:songbird/widgets/form_container_widget.dart';
 import '../firebase_auth/firebase_auth_class.dart';
 import 'login.dart';
-
+import 'package:songbird/classes/users.dart';
+import 'package:songbird/database_management/database_funcs.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -131,10 +133,15 @@ class _SignUpPageState extends State<SignUpPage> {
 
 
     User? user = await _auth.signUpWithEmailAndPassword(email, password);
+    String userID = (FirebaseAuth.instance.currentUser?.uid)!;
+    Map<String, dynamic> likedArtist = {"randomUUID": null};
+    Map<String, int> tasteTrack = {"HIPHOP": 1};
 
 
     if (user != null) {
       Navigator.pushNamed(context, "/home");
+      CURRENT_USER = BaseListener(uuid: userID, username: username, displayName: "", profilePicture: "", likedArtists: likedArtist, tasteTracker:  tasteTrack);
+      uploadUserToFirestore();
     } else {
       print("Some error happened, user is null");
     }
