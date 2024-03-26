@@ -96,8 +96,8 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       child: Center(
                           child: Text(
-                        "Login",
-                        style: TextStyle(
+                            "Log In",
+                            style: TextStyle(
                             color: Colors.black, fontWeight: FontWeight.bold),
                       ))),
                 ),
@@ -110,7 +110,7 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(
                   width: 5,
                 ),
-                GestureDetector(
+                InkWell(
                     onTap: () {
                       Navigator.pushAndRemoveUntil(
                         context,

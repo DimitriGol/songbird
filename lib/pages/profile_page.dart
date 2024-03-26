@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:songbird/main.dart';
+import 'package:songbird/classes/users.dart';
+
 
 class ProfilePage extends StatefulWidget
 {
@@ -69,7 +72,7 @@ class _ProfilePageState extends State<ProfilePage> {
       children: [
         const SizedBox(height: 8),
         Text(
-          'DJ Johnny Apppleseed',
+          CURRENT_USER.username,
           style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 2),
