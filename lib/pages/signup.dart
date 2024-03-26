@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:songbird/main.dart';
+import 'package:songbird/pages/signup_survey.dart';
 import 'package:songbird/widgets/form_container_widget.dart';
 import '../firebase_auth/firebase_auth_class.dart';
 import 'login.dart';
+import 'signup_survey.dart';
 import 'package:songbird/classes/users.dart';
 import 'package:songbird/database_management/database_funcs.dart';
 
@@ -105,7 +107,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 SizedBox(
                   width: 5,
                 ),
-                GestureDetector(
+                InkWell(
                     onTap: () {
                       Navigator.pushAndRemoveUntil(
                         context,
@@ -139,7 +141,10 @@ class _SignUpPageState extends State<SignUpPage> {
 
 
     if (user != null) {
-      Navigator.pushNamed(context, "/home");
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => SignupSurveyPage()),
+      );
       CURRENT_USER = BaseListener(uuid: userID, username: username, displayName: "", profilePicture: "", likedArtists: likedArtist, tasteTracker:  tasteTrack);
       uploadUserToFirestore();
     } else {
