@@ -101,7 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
         centerTitle: true,
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.settings, color: Colors.blueGrey,),
+            icon: Icon(Icons.settings, color: Colors.black,),
             onPressed: () {
               Navigator.push(
                 context,
