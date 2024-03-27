@@ -14,7 +14,7 @@ class ExplorePage extends StatefulWidget
 
 
 class _ExplorePageState extends State<ExplorePage> {
-  final style = TextStyle(fontSize:BouncingScrollSimulation.maxSpringTransferVelocity, fontWeight: FontWeight.bold);
+  final style = TextStyle(fontSize: 60, fontWeight: FontWeight.bold);
   final description = TextStyle(fontSize:16, color: Colors.white);
 
   @override
@@ -99,7 +99,7 @@ Artist test_artist = Artist(
   spotifyLink:'https://open.spotify.com/artist/7Mtf0UrDmV5JUU5uAziNRA?si=51Yg1h--TDuPOs1jZRxpng',
   appleMusicLink: '',
   youtubeLink:'',
-  description:'I\'m trappin out my mama\'s basement frfr');
+  description:'I\'m trappin out my mama\'s basement frfr\n☜(⌒▽⌒)☞');
 
 
 
