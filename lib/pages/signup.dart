@@ -134,8 +134,8 @@ class _SignUpPageState extends State<SignUpPage> {
 
     User? user = await _auth.signUpWithEmailAndPassword(email, password);
     String userID = (FirebaseAuth.instance.currentUser?.uid)!;
-    Map<String, dynamic> likedArtist = {"randomUUID": null};
-    Map<String, int> tasteTrack = {"HIPHOP": 1};
+    Map<String, dynamic> likedArtist = {};
+    Map<String, int> tasteTrack = {"CLASSICAL": 0, "COUNTRY": 0, "EDM": 0, "HIPHOP": 0, "HOUSE": 0, "POP": 0, "RAP": 0, "RNB" : 0, "ROCK": 0};
 
 
     if (user != null) {
