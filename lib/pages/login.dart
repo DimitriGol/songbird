@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:songbird/database_management/database_funcs.dart';
 import 'package:songbird/widgets/form_container_widget.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:spotify/spotify.dart' as spotify_api;
@@ -49,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.grey,//PAGE COLOR
+        backgroundColor: Colors.blueGrey,//PAGE COLOR
         body: 
         Center(
           child: Column(
@@ -96,8 +97,8 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       child: Center(
                           child: Text(
-                        "Login",
-                        style: TextStyle(
+                            "Log In",
+                            style: TextStyle(
                             color: Colors.black, fontWeight: FontWeight.bold),
                       ))),
                 ),
@@ -110,7 +111,7 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(
                   width: 5,
                 ),
-                GestureDetector(
+                InkWell(
                     onTap: () {
                       Navigator.pushAndRemoveUntil(
                         context,
@@ -136,9 +137,11 @@ class _LoginPageState extends State<LoginPage> {
 
 
     User? user = await _auth.signInWithEmailAndPassword(email, password);
+    String userID = (FirebaseAuth.instance.currentUser?.uid)!;
 
 
     if (user != null) {
+      getUserDataFromFirestore(userID);
       Navigator.pushNamed(context, "/home");
     } else { //login error button
       showDialog(

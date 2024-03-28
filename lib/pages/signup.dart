@@ -1,9 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:songbird/main.dart';
+import 'package:songbird/pages/signup_survey.dart';
 import 'package:songbird/widgets/form_container_widget.dart';
 import '../firebase_auth/firebase_auth_class.dart';
 import 'login.dart';
-
+import 'signup_survey.dart';
+import 'package:songbird/classes/users.dart';
+import 'package:songbird/database_management/database_funcs.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -35,7 +39,7 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey,//PAGE COLOR
+      backgroundColor: Colors.blueGrey,//PAGE COLOR
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -103,7 +107,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 SizedBox(
                   width: 5,
                 ),
-                GestureDetector(
+                InkWell(
                     onTap: () {
                       Navigator.pushAndRemoveUntil(
                         context,
@@ -129,12 +133,14 @@ class _SignUpPageState extends State<SignUpPage> {
     String email = _emailController.text;
     String password = _passwordController.text;
 
-
     User? user = await _auth.signUpWithEmailAndPassword(email, password);
-
+    
 
     if (user != null) {
-      Navigator.pushNamed(context, "/home");
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => SignupSurveyPage(username: username)),
+      );
     } else {
       print("Some error happened, user is null");
     }

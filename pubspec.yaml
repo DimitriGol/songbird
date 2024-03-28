@@ -47,6 +47,7 @@ dependencies:
   url_launcher: ^6.2.5
   oauth2_client: ^3.2.2
   spotify: ^0.13.4
+  google_fonts: ^6.2.1
 
 dev_dependencies:
   flutter_test:
@@ -74,6 +75,7 @@ flutter:
   assets:
      - assets/.env
      - lib/images/
+     - lib/images/pixel_space.gif
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

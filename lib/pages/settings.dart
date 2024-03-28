@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:songbird/firebase_auth/firebase_auth_class.dart';
 
 class SettingsPage extends StatefulWidget
 {
@@ -19,6 +20,8 @@ class SettingsPage extends StatefulWidget
 
 
 class _SettingsPageState extends State<SettingsPage> {
+
+  final FirebaseAuthService authService = FirebaseAuthService();
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -32,13 +35,15 @@ class _SettingsPageState extends State<SettingsPage> {
         // TRY THIS: Try changing the color here to a specific color (to
         // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
         // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor:Colors.yellow,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text('Settings'),
         centerTitle: true,
 
       ),
+
+  
 
 
       body: Center(
@@ -60,12 +65,53 @@ class _SettingsPageState extends State<SettingsPage> {
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'You are on the settings page!',
-            ),
+           ElevatedButton(
+              onPressed: () {
+              //do something
+              },
+              child: Text('Dummy Button', style: TextStyle(color: Colors.white),),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromARGB(255, 25, 79, 104),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    minimumSize: Size(300, 50),
+              )
+             ) ,
+
+             SizedBox(height: 10),//for spacing
+
+             ElevatedButton(
+              onPressed: () {
+              //do something
+              },
+              child: Text('Dummy Button\'s Brother', style: TextStyle(color: Colors.white),),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 137, 208, 241),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    minimumSize: Size(300, 50),
+              )
+             ) ,
+
+             SizedBox(height: 10), // for spacing
+
+            ElevatedButton.icon(
+              onPressed: () {
+              authService.signOut(context);
+              },
+                  label: Text('Sign Out', style: TextStyle(color: Colors.white),),
+                  icon: Icon(Icons.logout, color: Colors.white,),  
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    minimumSize: Size(300, 50),
+              )
+             ) ,
           ],
         ),
       ),
+      
+      
     );
   }
 }
+
+//fat people are dumb

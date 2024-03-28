@@ -11,7 +11,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-
+dynamic CURRENT_USER; //global variable to be assigned a user class later on in program flow
 
 void main() async{
   await dotenv.load(fileName: "assets/.env");
@@ -92,11 +92,16 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor:   Colors.yellow,
-        title: Text(widget.title),
+        title:IconButton(icon: Container(
+          width:200,
+          height:200,
+          child:Image.asset('lib/images/songbird_black_logo_and_text.png')),
+        onPressed: ()
+         {},),
         centerTitle: true,
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.settings),
+            icon: Icon(Icons.settings, color: Colors.black,),
             onPressed: () {
               Navigator.push(
                 context,
@@ -110,10 +115,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        //backgroundColor: const Color.fromARGB(255, 134, 130, 130),
+        backgroundColor: Colors.blueGrey,
         showSelectedLabels: false,
         showUnselectedLabels: false,
-        iconSize: 40,
+        iconSize: 35,
         unselectedItemColor: Colors.black,
         selectedItemColor:   Colors.yellow,
         currentIndex: currentIndex,
