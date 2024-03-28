@@ -133,20 +133,14 @@ class _SignUpPageState extends State<SignUpPage> {
     String email = _emailController.text;
     String password = _passwordController.text;
 
-
     User? user = await _auth.signUpWithEmailAndPassword(email, password);
-    String userID = (FirebaseAuth.instance.currentUser?.uid)!;
-    Map<String, dynamic> likedArtist = {"randomUUID": null};
-    Map<String, int> tasteTrack = {"HIPHOP": 1};
-
+    
 
     if (user != null) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => SignupSurveyPage()),
+        MaterialPageRoute(builder: (context) => SignupSurveyPage(username: username)),
       );
-      CURRENT_USER = BaseListener(uuid: userID, username: username, displayName: "", profilePicture: "", likedArtists: likedArtist, tasteTracker:  tasteTrack);
-      uploadUserToFirestore();
     } else {
       print("Some error happened, user is null");
     }
