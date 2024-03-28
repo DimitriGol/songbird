@@ -4,9 +4,11 @@ import 'package:songbird/main.dart';
 
 void uploadUserToFirestore(String userType, String uuid, String username, String profilePicture, Map<String, dynamic> likedArtists, Map<String, int> tasteTracker, String description, String spotifyLink, String appleMusicLink, String youtubeLink) async{
     final firestore = FirebaseFirestore.instance;
-
+    // CALL SPOTIFY FUNCTION TO RETRIEVE USER TRACKS AND IMAGE
+    profilePicture = ""; //REPLACE THIS EMPTY STRING WITH THE ACTUAL URL
     try {
       if(userType == 'Artist'){
+        //UPDATE ARTIST CLASS TO HAVE A DATA MEMBER FOR THE TRACKS TO BE STORED
         CURRENT_USER = Artist(uuid: uuid, username: username, profilePicture: profilePicture, likedArtists: likedArtists, tasteTracker: tasteTracker, spotifyLink: spotifyLink, appleMusicLink: appleMusicLink, youtubeLink: youtubeLink, description: description);
         DocumentReference userDocRef = firestore.collection("artists").doc(uuid);
         await userDocRef.set({
@@ -18,6 +20,7 @@ void uploadUserToFirestore(String userType, String uuid, String username, String
         'spotify_link' : CURRENT_USER.spotifyLink,
         'description' : CURRENT_USER.description,
         'youtube_link' : CURRENT_USER.youtubeLink,
+        //'snippets' : CURRENT_USER.DATA MEMBER THAT STORES SNIPPETS
         });
       }else if(userType == 'Listener'){
         CURRENT_USER = BaseListener(uuid: uuid, username: username, profilePicture: profilePicture, likedArtists: likedArtists, tasteTracker: tasteTracker);
