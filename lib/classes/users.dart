@@ -1,6 +1,11 @@
 //Classes for the users: Listeners and Artists
 
 //Genre enums
+
+import 'package:songbird/database_management/database_funcs.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:songbird/main.dart';
+
 enum Genres { classical, country, edm, hiphop, house, pop, rap, rnb, rock}
 
 // Listener
@@ -21,9 +26,31 @@ class BaseListener {
     required this.tasteTracker,
   });
 
-  void likeArtist(String artistId, List<Genres> genres){
-    //Puts the artist's uuid in the Listener's likedArtists map
-    //When a listener likes a listener's song, it increases the values in it's tasteTracker map
+  void likeArtist(String artistId) async // I assume artistId is UUID.
+  {
+    final firestore = FirebaseFirestore.instance;
+    likedArtists[artistId] = "";
+
+    try
+    {
+      if (runtimeType.toString() == "Artist")
+      {
+        DocumentReference userDocRef = firestore.collection("artists").doc(uuid);
+        await userDocRef.set({
+        'liked_artists': likedArtists,
+        });
+      }
+
+      else if (runtimeType.toString() == "BaseListener"){
+        DocumentReference userDocRef = firestore.collection("artists").doc(uuid);
+        await userDocRef.set({
+        'liked_artists': likedArtists,
+      });
+      }
+
+    } catch (e) {
+      print('Error: $e');
+    }
   }
 }
 
