@@ -10,7 +10,7 @@ enum Genres { classical, country, edm, hiphop, house, pop, rap, rnb, rock}
 class BaseListener {
   final String uuid;
   String username;
-  String displayName;
+  //String displayName;
   String profilePicture;
   Map<String, dynamic> likedArtists;
   Map<String, int> tasteTracker;
@@ -18,7 +18,7 @@ class BaseListener {
   BaseListener({
     required this.uuid,
     required this.username,
-    required this.displayName,
+    //required this.displayName,
     required this.profilePicture,
     required this.likedArtists,
     required this.tasteTracker,
@@ -38,7 +38,7 @@ class BaseListener {
 }
 
 class Artist extends BaseListener {
-  List<String> snippets;
+  //List<String> snippets;
   String spotifyLink;
   String appleMusicLink;
   String youtubeLink;
@@ -47,11 +47,11 @@ class Artist extends BaseListener {
   Artist({
     required super.uuid,
     required super.username,
-    required super.displayName,
+    //required super.displayName,
     required super.profilePicture,
     required super.likedArtists,
     required super.tasteTracker,
-    required this.snippets,
+    //required this.snippets,
     required this.spotifyLink,
     required this.appleMusicLink, 
     required this.youtubeLink,

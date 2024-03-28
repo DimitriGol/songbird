@@ -10,6 +10,9 @@ import 'package:songbird/classes/users.dart';
 import 'package:songbird/database_management/database_funcs.dart';
 
 class SignupSurveyPage extends StatefulWidget {
+  const SignupSurveyPage({super.key, required this.username});
+  final String username;
+
   @override
   _SignupSurveyPageState createState() => _SignupSurveyPageState();
 }
@@ -17,6 +20,9 @@ class SignupSurveyPage extends StatefulWidget {
 class _SignupSurveyPageState extends State<SignupSurveyPage> {
   List<String> selectedGenres = [];
   String userType = '';
+  String userID = (FirebaseAuth.instance.currentUser?.uid)!;
+  Map<String, dynamic> likedArtistMap = {};
+  Map<String, int> tasteTrackerMap = {"CLASSICAL": 0, "COUNTRY": 0, "EDM": 0, "HIPHOP": 0, "HOUSE": 0, "POP": 0, "RAP": 0, "R&B" : 0, "ROCK": 0};
 
   // Extra data members for Artist class 
   TextEditingController _description = TextEditingController();
@@ -193,6 +199,14 @@ class _SignupSurveyPageState extends State<SignupSurveyPage> {
     // print('Spotify Link:' + CURRENT_USER.spotifyLink);
     // print('Apple Music Link' + CURRENT_USER.appleMusicLink);
     // print('Youtube Link' + CURRENT_USER.youtubeLink);
+
+    for (int i=0; i<selectedGenres.length; i++){
+      String genre = selectedGenres[i].toUpperCase();
+      
+      tasteTrackerMap[genre] = 1;
+    }
+
+    uploadUserToFirestore(userType, userID, widget.username, "", likedArtistMap, tasteTrackerMap, _description.text, _spotifyLink.text, _appleMusicLink.text, _youtubeLink.text);
 
     //Navigate to the home page
     Navigator.pushNamed(context, "/home");
