@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:songbird/classes/users.dart';
 import 'package:songbird/main.dart';
+import 'dart:convert';
 
 void uploadUserToFirestore(String userType, String uuid, String username, String profilePicture, Map<String, dynamic> likedArtists, Map<String, int> tasteTracker, String description, String spotifyLink, String appleMusicLink, String youtubeLink) async{
     final firestore = FirebaseFirestore.instance;
@@ -11,7 +12,7 @@ void uploadUserToFirestore(String userType, String uuid, String username, String
         DocumentReference userDocRef = firestore.collection("artists").doc(uuid);
         await userDocRef.set({
         'liked_artists': CURRENT_USER.likedArtists,
-        'profile_pic': null,
+        'profile_pic': CURRENT_USER.profilePicture,
         'taste_tracker': CURRENT_USER.tasteTracker,
         'username' : CURRENT_USER.username,
         'apple_music_link' : CURRENT_USER.appleMusicLink,
@@ -24,7 +25,7 @@ void uploadUserToFirestore(String userType, String uuid, String username, String
         DocumentReference userDocRef = firestore.collection("listeners").doc(uuid);
         await userDocRef.set({
         'liked_artists': CURRENT_USER.likedArtists,
-        'profile_pic': null,
+        'profile_pic': CURRENT_USER.profilePicture,
         'taste_tracker': CURRENT_USER.tasteTracker,
         'username' : CURRENT_USER.username,
         });
@@ -36,16 +37,53 @@ void uploadUserToFirestore(String userType, String uuid, String username, String
 
 void getUserDataFromFirestore(String uuid) async{
   final firestore = FirebaseFirestore.instance;
+  bool secondCheck = false;
+
   try{
     DocumentReference userDocRef = firestore.collection("listeners").doc(uuid);
     await userDocRef.get().then(
       (DocumentSnapshot doc) {
-        print(doc.exists);
-        final data = doc.data() as Map<String, dynamic>;
-        print(data);
+        if(doc.exists == false){
+          secondCheck = true;
+        }else{
+          final data = doc.data() as Map<String, dynamic>;
+
+          Map<String, dynamic> artist_Map = Map.from(data["liked_artists"]);
+
+          Map<String, int> taste_Map = Map.from(data['taste_tracker']);
+
+          CURRENT_USER = BaseListener(uuid: uuid, username: data["username"], profilePicture: data["profile_pic"], likedArtists: artist_Map, tasteTracker: taste_Map);
+          // print(CURRENT_USER.uuid);
+          // print(CURRENT_USER.likedArtists);
+          // print(CURRENT_USER.tasteTracker);
+          // print(CURRENT_USER.runtimeType);
+        }
       },
     );
   } catch (e) {
     print('Error: $e');
+  }
+
+  if(secondCheck){
+    try{
+      DocumentReference userDocRef = firestore.collection("artists").doc(uuid);
+      await userDocRef.get().then(
+      (DocumentSnapshot doc) {
+          final data = doc.data() as Map<String, dynamic>;
+
+          Map<String, dynamic> artist_Map = Map.from(data["liked_artists"]);
+
+          Map<String, int> taste_Map = Map.from(data['taste_tracker']);
+
+          CURRENT_USER = Artist(uuid: uuid, username: data["username"], profilePicture: data["profile_pic"], likedArtists: artist_Map, tasteTracker: taste_Map, spotifyLink: data["spotify_link"], appleMusicLink: data["apple_music_link"], youtubeLink: data["youtube_link"], description: data["description"]);
+          // print(CURRENT_USER.uuid);
+          // print(CURRENT_USER.likedArtists);
+          // print(CURRENT_USER.tasteTracker);
+          // print(CURRENT_USER.runtimeType);
+        }
+    );
+    }catch (e) {
+      print('Error: $e');
+    }
   }
 }
