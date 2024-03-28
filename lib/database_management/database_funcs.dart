@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:songbird/classes/users.dart';
 import 'package:songbird/main.dart';
-import 'dart:convert';
 
 void uploadUserToFirestore(String userType, String uuid, String username, String profilePicture, Map<String, dynamic> likedArtists, Map<String, int> tasteTracker, String description, String spotifyLink, String appleMusicLink, String youtubeLink) async{
     final firestore = FirebaseFirestore.instance;
