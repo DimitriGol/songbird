@@ -1,6 +1,8 @@
 //Classes for the users: Listeners and Artists
 
 //Genre enums
+import 'package:songbird/database_management/database_funcs.dart';
+
 enum Genres { classical, country, edm, hiphop, house, pop, rap, rnb, rock}
 
 // Listener
@@ -21,9 +23,25 @@ class BaseListener {
     required this.tasteTracker,
   });
 
-  void likeArtist(String artistId, List<Genres> genres){
+  void likeArtist(String artistId, List<Genres> genres) // I assume artistId is UUID.
+  {
     //Puts the artist's uuid in the Listener's likedArtists map
     //When a listener likes a listener's song, it increases the values in it's tasteTracker map
+
+    likedArtists[artistId] = genres; // stores genre preferences into the likedArtist map using UUID.
+
+    genres.forEach((genre) // iterate through each element in the genres list. Place "genres" into genre parameter.
+    {
+      if (tasteTracker.containsKey(genre.toString()))
+      {
+        tasteTracker[genre.toString()] = (tasteTracker[genre.toString()] ?? 0) + 1; // the ?? 0 means that if the key doesnt exist which in this case would be null. It would instead set the null value to 0.
+      }
+      else
+      {
+        tasteTracker[genre.toString()] = 1; // if the key doesnt exist in the genre. Initiate it to 1.
+      }
+     });
+     uploadUserToFirestore(); // upload user data to firestore.
   }
 }
 
