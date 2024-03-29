@@ -191,6 +191,7 @@ Future<void> fetchArtist() async {
     print('FETCHING ARTIST:  ');
     print('Name: ${artist.name}');
     print('Genres: ${artist.genres}');
+    
   } catch (e) {
     print('Error fetching artist: $e');
   }
