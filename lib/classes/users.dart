@@ -55,7 +55,7 @@ class BaseListener {
 }
 
 class Artist extends BaseListener {
-  //List<String> snippets;
+  Map<String, String> snippets;
   String spotifyLink;
   String appleMusicLink;
   String youtubeLink;
@@ -68,7 +68,7 @@ class Artist extends BaseListener {
     required super.profilePicture,
     required super.likedArtists,
     required super.tasteTracker,
-    //required this.snippets,
+    required this.snippets,
     required this.spotifyLink,
     required this.appleMusicLink, 
     required this.youtubeLink,

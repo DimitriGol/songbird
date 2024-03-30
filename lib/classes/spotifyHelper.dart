@@ -4,7 +4,6 @@ import 'package:spotify/spotify.dart' as spotify_api;
 import 'package:songbird/main.dart';
 
 
-
 Future<String?> getSpotifyLink(String UUID) async {
   try {
     final DocumentSnapshot artistDoc = await FirebaseFirestore.instance.collection('artists').doc(UUID).get();
@@ -37,9 +36,13 @@ Future<String?> getDescription(String UUID) async {
   } catch (e) {print('Error fetching artist: $e');return null;}
 }
 
-class SpotifyHelper {
+class SpotifyHelper 
+{
   late final spotify_api.SpotifyApiCredentials credentials;
   late final spotify_api.SpotifyApi spotify;
+
+  Map<String, String> trackMaps = {};
+  String imageUrl = "";
 
   SpotifyHelper() {
     String clientID = dotenv.env['CLIENT_ID']!;
@@ -70,7 +73,7 @@ class SpotifyHelper {
     } catch (e) { print('Error fetching artist name: $e');return null;}
   }
 
-  Future<Iterable<spotify_api.Track>?> getTopTracks(String UUID) async
+  void getTopTracks(String UUID) async
   {
     try 
     {
@@ -85,13 +88,19 @@ class SpotifyHelper {
 
         final topTracks = await spotify.artists.topTracks(artistId!, USA);
 
-        print('Top Tracks:');
-          for (var track in topTracks) 
-          {
-            print('${track.name}');
-          }
+        print(topTracks);
+        print(topTracks.runtimeType);
 
-        return topTracks;
+        var counter = 0;
+        for (var track in topTracks)
+        {
+          if (counter >= 3)
+          {
+            break;
+          }
+          trackMaps[track.name!] = track.previewUrl!;
+          counter++;
+        }
     } 
     else 
     {
@@ -101,7 +110,7 @@ class SpotifyHelper {
     } catch (e) {print('Error fetching top tracks: $e');return null;}
   }
 
-  Future<String?> getArtistImage (String UUID) async
+  void getArtistImage (String UUID) async
   {
     try 
     {
@@ -115,7 +124,7 @@ class SpotifyHelper {
           final artist = await spotify.artists.get(artistId!); 
           String? imageLink = artist.images!.first.url;
           print('Image Link:$imageLink');
-          return imageLink;
+          imageUrl = imageLink!;
       }
     } catch (e) {print('Error fetching Image Link: $e');return null;}
   }

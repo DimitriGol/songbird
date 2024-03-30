@@ -7,15 +7,15 @@ void uploadUserToFirestore(String userType, String uuid, String username, String
     final firestore = FirebaseFirestore.instance;
 
     final SpotifyHelp = SpotifyHelper();
-    final profPic = SpotifyHelp.getArtistImage(uuid);
-    final topTracks = SpotifyHelp.getTopTracks(uuid);
+    SpotifyHelp.getArtistImage(uuid);
+    SpotifyHelp.getTopTracks(uuid);
     // CALL SPOTIFY FUNCTION TO RETRIEVE USER TRACKS AND IMAGE
-    profilePicture = "$profPic"; //REPLACE THIS EMPTY STRING WITH THE ACTUAL URL
+    profilePicture = SpotifyHelp.imageUrl; //REPLACE THIS EMPTY STRING WITH THE ACTUAL URL
 
     try {
       if(userType == 'Artist'){
         //UPDATE ARTIST CLASS TO HAVE A DATA MEMBER FOR THE TRACKS TO BE STORED
-        CURRENT_USER = Artist(uuid: uuid, username: username, profilePicture: profilePicture, likedArtists: likedArtists, tasteTracker: tasteTracker, spotifyLink: spotifyLink, appleMusicLink: appleMusicLink, youtubeLink: youtubeLink, description: description);
+        CURRENT_USER = Artist(uuid: uuid, username: username, profilePicture: profilePicture, likedArtists: likedArtists, tasteTracker: tasteTracker, spotifyLink: spotifyLink, appleMusicLink: appleMusicLink, youtubeLink: youtubeLink, description: description, snippets: SpotifyHelp.trackMaps);
         DocumentReference userDocRef = firestore.collection("artists").doc(uuid);
         await userDocRef.set({
         'liked_artists': CURRENT_USER.likedArtists,
@@ -26,7 +26,7 @@ void uploadUserToFirestore(String userType, String uuid, String username, String
         'spotify_link' : CURRENT_USER.spotifyLink,
         'description' : CURRENT_USER.description,
         'youtube_link' : CURRENT_USER.youtubeLink,
-        //'snippets' : CURRENT_USER.DATA MEMBER THAT STORES SNIPPETS
+        'snippets' : CURRENT_USER.snippets,
         });
       }else if(userType == 'Listener'){
         CURRENT_USER = BaseListener(uuid: uuid, username: username, profilePicture: profilePicture, likedArtists: likedArtists, tasteTracker: tasteTracker);
@@ -80,10 +80,10 @@ void getUserDataFromFirestore(String uuid) async{
           final data = doc.data() as Map<String, dynamic>;
 
           Map<String, dynamic> artist_Map = Map.from(data["liked_artists"]);
-
+          Map<String, String> snippets_Map = Map.from(data["snippets"]);
           Map<String, int> taste_Map = Map.from(data['taste_tracker']);
 
-          CURRENT_USER = Artist(uuid: uuid, username: data["username"], profilePicture: data["profile_pic"], likedArtists: artist_Map, tasteTracker: taste_Map, spotifyLink: data["spotify_link"], appleMusicLink: data["apple_music_link"], youtubeLink: data["youtube_link"], description: data["description"]);
+          CURRENT_USER = Artist(uuid: uuid, username: data["username"], profilePicture: data["profile_pic"], likedArtists: artist_Map, tasteTracker: taste_Map, spotifyLink: data["spotify_link"], appleMusicLink: data["apple_music_link"], youtubeLink: data["youtube_link"], description: data["description"], snippets: snippets_Map);
           // print(CURRENT_USER.uuid);
           // print(CURRENT_USER.likedArtists);
           // print(CURRENT_USER.tasteTracker);
@@ -94,4 +94,22 @@ void getUserDataFromFirestore(String uuid) async{
       print('Error: $e');
     }
   }
+}
+
+Future<Map<String, dynamic>> explorePageMap(String uuid) async
+{
+  var data;
+  final firestore = FirebaseFirestore.instance;
+  try{
+      DocumentReference userDocRef = firestore.collection("artists").doc(uuid);
+      await userDocRef.get().then(
+      (DocumentSnapshot doc) {
+          data = doc.data() as Map<String, dynamic>;         
+        }
+    );
+    }catch (e) {
+      print('Error: $e');
+    }
+
+    return data;
 }

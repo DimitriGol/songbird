@@ -4,6 +4,7 @@ import 'package:songbird/database_management/database_funcs.dart';
 import 'package:songbird/widgets/form_container_widget.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:spotify/spotify.dart' as spotify_api;
+import 'package:songbird/classes/spotifyHelper.dart';
 import 'dart:convert';
 
 
@@ -201,11 +202,13 @@ Future<void> fetchArtist() async {
     final market = spotify_api.Market.US;
 
     // Fetch top tracks of the artist
-    final topTracks = await spotify.artists.topTracks(artistId, market);
-    print('Top Tracks:');
-    for (var track in topTracks) {
-      print('${track.name}');
-    }
+    var topTracks = await spotify.artists.topTracks(artistId, market);
+    var secondTopTracks = topTracks.toList();
+    print('topTracks: $topTracks');
+    print('topTracks runtime: $topTracks.runtimeType');
+    var lol = secondTopTracks.first.previewUrl;
+    print('$lol');
+    print(secondTopTracks.runtimeType);
   } catch (e) {
     print('Error fetching artist: $e');
   }

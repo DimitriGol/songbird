@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:songbird/classes/users.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:spotify/spotify.dart' as spotify_api;
+import 'package:songbird/database_management/database_funcs.dart';
+import 'package:songbird/classes/spotifyHelper.dart';
+import 'dart:async';
 
 class ExplorePage extends StatefulWidget
 {
-  final Artist artist;
-  const ExplorePage({Key? key, required this.artist}): super(key:key);
+  const ExplorePage({super.key, required this.artistUUID});
+  final String artistUUID;
 
   @override
   State<ExplorePage> createState() => _ExplorePageState();
@@ -19,22 +19,34 @@ class ExplorePage extends StatefulWidget
 
 
 class _ExplorePageState extends State<ExplorePage> {
-
-  YourClass yourClass = YourClass();
   final style = TextStyle(fontSize: 60, fontWeight: FontWeight.bold);
   final description = TextStyle(fontSize: 16, color: Colors.white);
 
-  void initState()
-  {
-    super.initState();
-    getSpotifyLink('BGJPSQwABJM8XDw4VasS5O9cxGo1');
-    yourClass.fetchArtist('BGJPSQwABJM8XDw4VasS5O9cxGo1');
-  }
+
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
+      body: 
+      FutureBuilder(
+        builder: (ctx, snapshot) {
+    // Checking if future is resolved
+        if (snapshot.connectionState == ConnectionState.done) {
+      // If we got an error
+        if (snapshot.hasError) {
+        return Center(
+          child: Text(
+            '${snapshot.error} occurred',
+            style: TextStyle(fontSize: 18),
+          ),
+        );
+         
+        // if we got our data
+      } else if (snapshot.hasData) {
+        // Extracting data from snapshot object
+        final artistData = snapshot.data as Map<String, dynamic>;
+        return Stack(
         children: [
           Container(
             decoration: BoxDecoration(
@@ -54,7 +66,7 @@ class _ExplorePageState extends State<ExplorePage> {
                     FittedBox(
                       fit: BoxFit.fitWidth,
                       child: Text(
-                        '${test_artist.username}',
+                        artistData['username'],
                         style: GoogleFonts.honk(
                           textStyle: style,
                         ),
@@ -68,7 +80,7 @@ class _ExplorePageState extends State<ExplorePage> {
                     ),
                     SizedBox(height: 8),
                     Text(
-                      '${test_artist.description}',
+                      artistData['description'],
                       textAlign: TextAlign.center,
                       style: GoogleFonts.chakraPetch(
                         textStyle: description,
@@ -88,7 +100,7 @@ class _ExplorePageState extends State<ExplorePage> {
                     SizedBox(height: 8),
                     ElevatedButton.icon(
                       onPressed: () {
-                        launchUrl(Uri.parse(test_artist.spotifyLink));
+                        launchUrl(Uri.parse(artistData['spotify_link']));
                       },
                       icon: Icon(FontAwesomeIcons.spotify, color: Colors.white),
                       label: Text(
@@ -153,124 +165,22 @@ class _ExplorePageState extends State<ExplorePage> {
             ),
           ),
         ],
-      ),
+      );
+
+    
+      }
+
+      
+
+    }
+      return Center(
+        child: CircularProgressIndicator(),
+        );
+  },
+     future: explorePageMap(widget.artistUUID), 
+  )
     );
   }
+  
 }
 
-
-
-
-
-//THIS WAS A TEST USER, KEEPING INCASE TESTING IS NEEDED AGAIN
-Artist test_artist = Artist(
-  uuid:'08172001', 
-  username:'DylanOnMars', 
-  //displayName: 'DylanOnMars', 
-  profilePicture: 'lib/images/midtermPFP.jpg', 
-  likedArtists: {},
-  tasteTracker: {},
-  //snippets: ['snippet1', 'snippet2'],
-  spotifyLink:'https://open.spotify.com/artist/7Mtf0UrDmV5JUU5uAziNRA?si=51Yg1h--TDuPOs1jZRxpng',
-  appleMusicLink: '',
-  youtubeLink:'',
-  description:'I\'m trappin out my mama\'s basement frfr\n☜(⌒▽⌒)☞');
-
-  Future<String?> getSpotifyLink(String UUID) async
-  {
-    try
-    {
-      final DocumentSnapshot artistDoc = await FirebaseFirestore.instance.collection('artists').doc(UUID).get();
-
-      if (artistDoc.exists)
-      {
-        final spotifyLink = artistDoc['spotify_link'] as String?;
-        print('Spotify Link: $spotifyLink');
-        return spotifyLink;
-      }
-
-      else
-      {
-        print('Artist with UUID $UUID does not exist.');
-        return null;
-      }
-    }catch (e){print('Error fetching artist: $e');return null;}
-  }
-
-Future main() async {
-  await dotenv.load(fileName: "assets/.env");
-}
-
-class YourClass {
-  late final spotify_api.SpotifyApiCredentials credentials;
-  late final spotify_api.SpotifyApi spotify;
-
-  YourClass() {
-
-    String clientID = dotenv.env['CLIENT_ID']!;
-    String clientSecret = dotenv.env['CLIENT_SECRET']!;
-
-    credentials = spotify_api.SpotifyApiCredentials(clientID, clientSecret);
-    spotify = spotify_api.SpotifyApi(credentials);
-  }
-
-
-  Future<void> fetchArtist(String UUID) async 
-  {
-    try {
-    // Call getSpotifyLink to retrieve the Spotify link
-      final spotifyLink = await getSpotifyLink(UUID);
-
-    // Use regex to extract artist ID from the Spotify link
-      final RegExp regex = RegExp(r'artist\/([a-zA-Z0-9]+)');
-      final match = regex.firstMatch(spotifyLink ?? '');
-
-      if (match != null) {
-        final artistId = match.group(1); // Extract the artist ID
-        final spotify = spotify_api.SpotifyApi(credentials);
-
-        final artist = await spotify.artists.get(artistId!); // Fetch artist using the extracted artist ID
-
-        print('FETCHING ARTIST (DEBUG):');
-        print('Name: ${artist.name}');
-        print('Images: ${artist.images!.first.url}');
-
-      // Specify the market for top tracks (in this example, 'US' for United States)
-        final USA = spotify_api.Market.US;
-
-      // Fetch top tracks of the artist
-        final topTracks = await spotify.artists.topTracks(artistId, USA);
-       print('Top Tracks:');
-       for (var track in topTracks) {
-         print('${track.name}');
-        }
-      } else {
-        print('Artist ID not found in the Spotify link.');
-      }
-    } catch (e) {print('Error fetching artist: $e');}
-  }
-
-  Future<String?> getArtistName (String UUID) async
-  {
-    try
-    {
-      final spotifyLink = await getSpotifyLink(UUID);
-      final RegExp regex = RegExp(r'artist\/([a-zA-Z0-9]+)');
-      final match = regex.firstMatch(spotifyLink ?? '');
-
-      if (match != null)
-      {
-        final artistId = match.group(1); // Extract the artist ID
-        final spotify = spotify_api.SpotifyApi(credentials);
-        final artist = await spotify.artists.get(artistId!);
-
-        return artist.name;
-      }
-
-    }
-    catch (e)
-    {
-
-    }
-  }
-}
