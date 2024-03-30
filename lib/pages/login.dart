@@ -187,12 +187,29 @@ class YourClass {
 
 Future<void> fetchArtist() async {
   try {
-    final artist = await spotify.artists.get('0OdUWJ0sBjDrqHygGUXeCF');
-    print('FETCHING ARTIST:  ');
+    final spotify = spotify_api.SpotifyApi(credentials); // Initialize your SpotifyApi object
+
+    final artistId = '7Mtf0UrDmV5JUU5uAziNRA';
+    final artist = await spotify.artists.get(artistId);
+
+    print('FETCHING ARTIST (DEBUG):');
     print('Name: ${artist.name}');
     print('Genres: ${artist.genres}');
-    
+    print('Images: ${artist.images!.first.url}');
+
+    // Specify the market for top tracks (in this example, 'US' for United States)
+    final market = spotify_api.Market.US;
+
+    // Fetch top tracks of the artist
+    final topTracks = await spotify.artists.topTracks(artistId, market);
+    print('Top Tracks:');
+    for (var track in topTracks) {
+      print('${track.name}');
+    }
   } catch (e) {
     print('Error fetching artist: $e');
   }
-}}
+}
+
+}
+
