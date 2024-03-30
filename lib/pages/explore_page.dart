@@ -3,10 +3,12 @@ import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:songbird/classes/users.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:songbird/main.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:songbird/database_management/database_funcs.dart';
 import 'package:songbird/classes/spotifyHelper.dart';
 import 'dart:async';
+import 'dart:math';
 
 class ExplorePage extends StatefulWidget
 {
@@ -46,6 +48,13 @@ class _ExplorePageState extends State<ExplorePage> {
       } else if (snapshot.hasData) {
         // Extracting data from snapshot object
         final artistData = snapshot.data as Map<String, dynamic>;
+
+        Map<String, String> snippets_Map = Map.from(artistData["snippets"]);
+        var snippetList = snippets_Map.entries.toList();
+
+        var idList = getArtistIDs();
+        final random = new Random();
+
         return Stack(
         children: [
           Container(
@@ -88,14 +97,52 @@ class _ExplorePageState extends State<ExplorePage> {
                     ),
              
                     SizedBox(height: 8),
-                    Text(
-                      '[INSERT SONGS HERE]',
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.chakraPetch(
-                        textStyle: description,
-                        color: Colors.yellow,
+                   
+                      ElevatedButton.icon(
+                      onPressed: () {
+                        launchUrl(Uri.parse(snippetList[0].value));
+                      },
+                      icon: Icon(FontAwesomeIcons.spotify, color: Colors.white),
+                      label: Text(
+                        snippetList[0].key,
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.yellow,
                       ),
                     ),
+
+                    SizedBox(height: 8),
+
+                    ElevatedButton.icon(
+                    onPressed: () {
+                      launchUrl(Uri.parse(snippetList[1].value));
+                    },
+                    icon: Icon(FontAwesomeIcons.spotify, color: Colors.white),
+                    label: Text(
+                      snippetList[1].key,
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.yellow,
+                    ),
+                  ),
+                  
+                   SizedBox(height: 8),
+
+                    ElevatedButton.icon(
+                    onPressed: () {
+                      launchUrl(Uri.parse(snippetList[2].value));
+                    },
+                    icon: Icon(FontAwesomeIcons.spotify, color: Colors.white),
+                    label: Text(
+                      snippetList[2].key,
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.yellow,
+                    ),
+                  ),
 
                     SizedBox(height: 8),
                     ElevatedButton.icon(
@@ -127,9 +174,10 @@ class _ExplorePageState extends State<ExplorePage> {
                 ElevatedButton(
                   onPressed: () {
                     // Handle DISLIKE button press
+                    String next = idList[random.nextInt(idList.length)];
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) =>ExplorePage(artistUUID: 'VxdIPNcjIGOIBALo1UvroNnoYi23')),
+                      MaterialPageRoute(builder: (context) =>ExplorePage(artistUUID: next)),
                     );
                   },
                   style: ElevatedButton.styleFrom(
@@ -147,11 +195,13 @@ class _ExplorePageState extends State<ExplorePage> {
                 ElevatedButton(
                   onPressed: () {
                     // Handle LIKE button press
+                    String next = idList[random.nextInt(idList.length)];
+                    CURRENT_USER.handleLike(widget.artistUUID);
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) =>ExplorePage(artistUUID: 'Z2BUv0KAMOfi0b3AiiONdaRpyPF2')),
+                      MaterialPageRoute(builder: (context) =>ExplorePage(artistUUID: next)),
                     );
-                     
+                    
                   },
                   style: ElevatedButton.styleFrom(
                     shape: CircleBorder(),
