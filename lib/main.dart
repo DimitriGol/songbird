@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:songbird/database_management/database_funcs.dart';
 
 dynamic CURRENT_USER; //global variable to be assigned a user class later on in program flow
 
@@ -80,9 +81,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   int currentIndex = 0;
 
+
   final pages = [
     LikesPage(),
-    ExplorePage(),
+    ExplorePage(artistUUID: 'BGJPSQwABJM8XDw4VasS5O9cxGo1'),
     ProfilePage()
   ];
 

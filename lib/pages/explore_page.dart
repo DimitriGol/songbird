@@ -1,15 +1,16 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:songbird/classes/users.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:songbird/database_management/database_funcs.dart';
+import 'dart:async';
 
 class ExplorePage extends StatefulWidget
 {
-   const ExplorePage({super.key});
+  const ExplorePage({super.key, required this.artistUUID});
+  final String artistUUID;
 
   @override
   State<ExplorePage> createState() => _ExplorePageState();
@@ -20,10 +21,31 @@ class _ExplorePageState extends State<ExplorePage> {
   final style = TextStyle(fontSize: 60, fontWeight: FontWeight.bold);
   final description = TextStyle(fontSize: 16, color: Colors.white);
 
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
+      body: 
+      FutureBuilder(
+        builder: (ctx, snapshot) {
+    // Checking if future is resolved
+        if (snapshot.connectionState == ConnectionState.done) {
+      // If we got an error
+        if (snapshot.hasError) {
+        return Center(
+          child: Text(
+            '${snapshot.error} occurred',
+            style: TextStyle(fontSize: 18),
+          ),
+        );
+         
+        // if we got our data
+      } else if (snapshot.hasData) {
+        // Extracting data from snapshot object
+        final artistData = snapshot.data as Map<String, dynamic>;
+        return Stack(
         children: [
           Container(
             decoration: BoxDecoration(
@@ -43,7 +65,7 @@ class _ExplorePageState extends State<ExplorePage> {
                     FittedBox(
                       fit: BoxFit.fitWidth,
                       child: Text(
-                        '${test_artist.username}',
+                        artistData['username'],
                         style: GoogleFonts.honk(
                           textStyle: style,
                         ),
@@ -57,7 +79,7 @@ class _ExplorePageState extends State<ExplorePage> {
                     ),
                     SizedBox(height: 8),
                     Text(
-                      '${test_artist.description}',
+                      artistData['description'],
                       textAlign: TextAlign.center,
                       style: GoogleFonts.chakraPetch(
                         textStyle: description,
@@ -77,7 +99,7 @@ class _ExplorePageState extends State<ExplorePage> {
                     SizedBox(height: 8),
                     ElevatedButton.icon(
                       onPressed: () {
-                        launchUrl(Uri.parse(test_artist.spotifyLink));
+                        launchUrl(Uri.parse(artistData['spotify_link']));
                       },
                       icon: Icon(FontAwesomeIcons.spotify, color: Colors.white),
                       label: Text(
@@ -142,9 +164,23 @@ class _ExplorePageState extends State<ExplorePage> {
             ),
           ),
         ],
-      ),
+      );
+
+    
+      }
+
+      
+
+    }
+      return Center(
+        child: CircularProgressIndicator(),
+        );
+  },
+     future: explorePageMap(widget.artistUUID), 
+  )
     );
   }
+  
 }
 
 
