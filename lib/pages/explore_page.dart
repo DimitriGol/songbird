@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -9,11 +10,15 @@ import 'package:songbird/database_management/database_funcs.dart';
 import 'package:songbird/classes/spotifyHelper.dart';
 import 'dart:async';
 import 'dart:math';
+import 'package:songbird/pages/likes_page.dart';
+import 'package:songbird/pages/profile_page.dart';
+import 'package:songbird/pages/settings.dart';
 
 class ExplorePage extends StatefulWidget
 {
-  const ExplorePage({super.key, required this.artistUUID});
+  const ExplorePage({super.key, required this.artistUUID, required this.onStartUp});
   final String artistUUID;
+  final bool onStartUp;
 
   @override
   State<ExplorePage> createState() => _ExplorePageState();
@@ -30,6 +35,33 @@ class _ExplorePageState extends State<ExplorePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+       appBar: 
+       widget.onStartUp == true
+       ? AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor:   Colors.yellow,
+        title:IconButton(icon: Container(
+          width:200,
+          height:200,
+          child:Image.asset('lib/images/songbird_black_logo_and_text.png')),
+        onPressed: ()
+         {
+          Navigator.pop(context);
+         },),
+        centerTitle: true,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.settings, color: Colors.black,),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SettingsPage()),
+              );
+            },
+          ),
+        ],
+      )
+      : null,
       body: 
       FutureBuilder(
         builder: (ctx, snapshot) {
@@ -177,7 +209,7 @@ class _ExplorePageState extends State<ExplorePage> {
                     String next = idList[random.nextInt(idList.length)];
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) =>ExplorePage(artistUUID: next)),
+                      MaterialPageRoute(builder: (context) =>ExplorePage(artistUUID: next, onStartUp: true)),
                     );
                   },
                   style: ElevatedButton.styleFrom(
@@ -188,7 +220,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   child: Icon(
                     Icons.thumb_down,
                     color: Colors.white,
-                    size: 60,
+                    size: 40,
                   ),
                 ),
 
@@ -199,7 +231,7 @@ class _ExplorePageState extends State<ExplorePage> {
                     CURRENT_USER.handleLike(widget.artistUUID);
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) =>ExplorePage(artistUUID: next)),
+                      MaterialPageRoute(builder: (context) =>ExplorePage(artistUUID: next, onStartUp: true)),
                     );
                     
                   },
@@ -211,7 +243,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   child: Icon(
                     Icons.favorite,
                     color: Colors.white,
-                    size: 60,
+                    size: 40,
                   ),
                 ),
               ],
@@ -230,6 +262,8 @@ class _ExplorePageState extends State<ExplorePage> {
         child: CircularProgressIndicator(),
         );
   },
+    
+
      future: explorePageMap(widget.artistUUID), 
   )
     );
