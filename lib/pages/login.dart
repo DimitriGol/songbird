@@ -34,9 +34,9 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    _yourClass = YourClass();
+    //_yourClass = YourClass();
     // Fetch artist information when LoginPage is initialized
-    _yourClass.fetchArtist();
+    //_yourClass.fetchArtist();
   }
 
 
@@ -193,10 +193,10 @@ Future<void> fetchArtist() async {
     final artistId = '7Mtf0UrDmV5JUU5uAziNRA';
     final artist = await spotify.artists.get(artistId);
 
-    print('FETCHING ARTIST (DEBUG):');
-    print('Name: ${artist.name}');
-    print('Genres: ${artist.genres}');
-    print('Images: ${artist.images!.first.url}');
+    // print('FETCHING ARTIST (DEBUG):');
+    // print('Name: ${artist.name}');
+    // print('Genres: ${artist.genres}');
+    // print('Images: ${artist.images!.first.url}');
 
     // Specify the market for top tracks (in this example, 'US' for United States)
     final market = spotify_api.Market.US;

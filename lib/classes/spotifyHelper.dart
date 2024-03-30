@@ -52,9 +52,9 @@ class SpotifyHelper
     spotify = spotify_api.SpotifyApi(credentials);
   }
 
-  Future<String?> getArtistName(String UUID) async {
+  Future<String?> getArtistName(String link) async {
     try {
-      final spotifyLink = await getSpotifyLink(UUID);
+      final spotifyLink = link;
       final RegExp regex = RegExp(r'artist\/([a-zA-Z0-9]+)');
       final match = regex.firstMatch(spotifyLink ?? '');
 
@@ -73,11 +73,11 @@ class SpotifyHelper
     } catch (e) { print('Error fetching artist name: $e');return null;}
   }
 
-  void getTopTracks(String UUID) async
+  Future<void> getTopTracks(String link) async
   {
     try 
     {
-    final spotifyLink = await getSpotifyLink(UUID);
+    final spotifyLink = link;
     final RegExp regex = RegExp(r'artist\/([a-zA-Z0-9]+)');
     final match = regex.firstMatch(spotifyLink ?? ''); 
 
@@ -88,8 +88,8 @@ class SpotifyHelper
 
         final topTracks = await spotify.artists.topTracks(artistId!, USA);
 
-        print(topTracks);
-        print(topTracks.runtimeType);
+        //print(topTracks);
+        //print(topTracks.runtimeType);
 
         var counter = 0;
         for (var track in topTracks)
@@ -98,23 +98,27 @@ class SpotifyHelper
           {
             break;
           }
-          trackMaps[track.name!] = track.previewUrl!;
+          trackMaps[track.name!] = track.externalUrls!.spotify.toString();
           counter++;
         }
+        //print(trackMaps);
     } 
     else 
     {
         print('getTopTracks Function: Artist ID not found in the Spotify link.');
         return null;
     }
-    } catch (e) {print('Error fetching top tracks: $e');return null;}
+    } catch (e) {
+      print('Error fetching top tracks: $e');
+      //return null;
+      }
   }
 
-  void getArtistImage (String UUID) async
+  Future<void> getArtistImage (String link) async
   {
     try 
     {
-      final spotifyLink = await getSpotifyLink(UUID);
+      final spotifyLink = link;
       final RegExp regex = RegExp(r'artist\/([a-zA-Z0-9]+)');
       final match = regex.firstMatch(spotifyLink ?? ''); 
 
@@ -123,7 +127,7 @@ class SpotifyHelper
           final artistId = match.group(1); // Extract the artist ID
           final artist = await spotify.artists.get(artistId!); 
           String? imageLink = artist.images!.first.url;
-          print('Image Link:$imageLink');
+          //print('Image Link:$imageLink');
           imageUrl = imageLink!;
       }
     } catch (e) {print('Error fetching Image Link: $e');return null;}

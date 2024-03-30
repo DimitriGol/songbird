@@ -73,8 +73,8 @@ class _ExplorePageState extends State<ExplorePage> {
                       ),
                     ),
                     SizedBox(height: 8),
-                    Image.asset(
-                      test_artist.profilePicture,
+                    Image.network(
+                      artistData["profile_pic"],
                       width: 200,
                       height: 200,
                     ),

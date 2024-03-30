@@ -7,11 +7,9 @@ void uploadUserToFirestore(String userType, String uuid, String username, String
     final firestore = FirebaseFirestore.instance;
 
     final SpotifyHelp = SpotifyHelper();
-    SpotifyHelp.getArtistImage(uuid);
-    SpotifyHelp.getTopTracks(uuid);
-    // CALL SPOTIFY FUNCTION TO RETRIEVE USER TRACKS AND IMAGE
-    profilePicture = SpotifyHelp.imageUrl; //REPLACE THIS EMPTY STRING WITH THE ACTUAL URL
-
+    await SpotifyHelp.getArtistImage(spotifyLink);
+    await SpotifyHelp.getTopTracks(spotifyLink);
+    profilePicture = SpotifyHelp.imageUrl;
     try {
       if(userType == 'Artist'){
         //UPDATE ARTIST CLASS TO HAVE A DATA MEMBER FOR THE TRACKS TO BE STORED
