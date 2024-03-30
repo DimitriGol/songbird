@@ -127,6 +127,10 @@ class _ExplorePageState extends State<ExplorePage> {
                 ElevatedButton(
                   onPressed: () {
                     // Handle DISLIKE button press
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) =>ExplorePage(artistUUID: 'VxdIPNcjIGOIBALo1UvroNnoYi23')),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     shape: CircleBorder(),
@@ -140,15 +144,14 @@ class _ExplorePageState extends State<ExplorePage> {
                   ),
                 ),
 
-                // Container(
-                //   width: 80,
-                //   height: 80,
-                //   child: Image.asset('lib/images/black_cat.gif'),
-                  
-                // ),
                 ElevatedButton(
                   onPressed: () {
                     // Handle LIKE button press
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) =>ExplorePage(artistUUID: 'Z2BUv0KAMOfi0b3AiiONdaRpyPF2')),
+                    );
+                     
                   },
                   style: ElevatedButton.styleFrom(
                     shape: CircleBorder(),
