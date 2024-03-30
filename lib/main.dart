@@ -84,7 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final pages = [
     LikesPage(),
-    ExplorePage(artistUUID: 'BGJPSQwABJM8XDw4VasS5O9cxGo1'),
+    ExplorePage(artistUUID: 'ODA5FAaCjCNJ2Nmbtk5NqLpoRsn1'),
     ProfilePage()
   ];
 

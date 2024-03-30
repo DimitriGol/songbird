@@ -5,6 +5,7 @@ import 'package:songbird/classes/users.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:songbird/database_management/database_funcs.dart';
+import 'package:songbird/classes/spotifyHelper.dart';
 import 'dart:async';
 
 class ExplorePage extends StatefulWidget
@@ -73,7 +74,7 @@ class _ExplorePageState extends State<ExplorePage> {
                     ),
                     SizedBox(height: 8),
                     Image.network(
-                      "https://i.pinimg.com/474x/b2/7a/3d/b27a3d8444edcfa925429b68d08e22e4.jpg", //replace with Spotify image link
+                      artistData["profile_pic"],
                       width: 200,
                       height: 200,
                     ),
@@ -185,24 +186,4 @@ class _ExplorePageState extends State<ExplorePage> {
   }
   
 }
-
-
-
-
-
-//THIS WAS A TEST USER, KEEPING INCASE TESTING IS NEEDED AGAIN
-Artist test_artist = Artist(
-  uuid:'08172001', 
-  username:'DylanOnMars', 
-  //displayName: 'DylanOnMars', 
-  profilePicture: 'lib/images/midtermPFP.jpg', 
-  likedArtists: {},
-  tasteTracker: {},
-  //snippets: ['snippet1', 'snippet2'],
-  spotifyLink:'https://open.spotify.com/artist/7Mtf0UrDmV5JUU5uAziNRA?si=51Yg1h--TDuPOs1jZRxpng',
-  appleMusicLink: '',
-  youtubeLink:'',
-  description:'I\'m trappin out my mama\'s basement frfr\n☜(⌒▽⌒)☞');
-
-
 

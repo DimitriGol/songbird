@@ -1,15 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:songbird/classes/spotifyHelper.dart';
 import 'package:songbird/classes/users.dart';
 import 'package:songbird/main.dart';
 
 void uploadUserToFirestore(String userType, String uuid, String username, String profilePicture, Map<String, dynamic> likedArtists, Map<String, int> tasteTracker, String description, String spotifyLink, String appleMusicLink, String youtubeLink) async{
     final firestore = FirebaseFirestore.instance;
-    // CALL SPOTIFY FUNCTION TO RETRIEVE USER TRACKS AND IMAGE
-    profilePicture = ""; //REPLACE THIS EMPTY STRING WITH THE ACTUAL URL
+
+    final SpotifyHelp = SpotifyHelper();
+    await SpotifyHelp.getArtistImage(spotifyLink);
+    await SpotifyHelp.getTopTracks(spotifyLink);
+    profilePicture = SpotifyHelp.imageUrl;
     try {
       if(userType == 'Artist'){
         //UPDATE ARTIST CLASS TO HAVE A DATA MEMBER FOR THE TRACKS TO BE STORED
-        CURRENT_USER = Artist(uuid: uuid, username: username, profilePicture: profilePicture, likedArtists: likedArtists, tasteTracker: tasteTracker, spotifyLink: spotifyLink, appleMusicLink: appleMusicLink, youtubeLink: youtubeLink, description: description);
+        CURRENT_USER = Artist(uuid: uuid, username: username, profilePicture: profilePicture, likedArtists: likedArtists, tasteTracker: tasteTracker, spotifyLink: spotifyLink, appleMusicLink: appleMusicLink, youtubeLink: youtubeLink, description: description, snippets: SpotifyHelp.trackMaps);
         DocumentReference userDocRef = firestore.collection("artists").doc(uuid);
         await userDocRef.set({
         'liked_artists': CURRENT_USER.likedArtists,
@@ -20,7 +24,7 @@ void uploadUserToFirestore(String userType, String uuid, String username, String
         'spotify_link' : CURRENT_USER.spotifyLink,
         'description' : CURRENT_USER.description,
         'youtube_link' : CURRENT_USER.youtubeLink,
-        //'snippets' : CURRENT_USER.DATA MEMBER THAT STORES SNIPPETS
+        'snippets' : CURRENT_USER.snippets,
         });
       }else if(userType == 'Listener'){
         CURRENT_USER = BaseListener(uuid: uuid, username: username, profilePicture: profilePicture, likedArtists: likedArtists, tasteTracker: tasteTracker);
@@ -74,10 +78,10 @@ void getUserDataFromFirestore(String uuid) async{
           final data = doc.data() as Map<String, dynamic>;
 
           Map<String, dynamic> artist_Map = Map.from(data["liked_artists"]);
-
+          Map<String, String> snippets_Map = Map.from(data["snippets"]);
           Map<String, int> taste_Map = Map.from(data['taste_tracker']);
 
-          CURRENT_USER = Artist(uuid: uuid, username: data["username"], profilePicture: data["profile_pic"], likedArtists: artist_Map, tasteTracker: taste_Map, spotifyLink: data["spotify_link"], appleMusicLink: data["apple_music_link"], youtubeLink: data["youtube_link"], description: data["description"]);
+          CURRENT_USER = Artist(uuid: uuid, username: data["username"], profilePicture: data["profile_pic"], likedArtists: artist_Map, tasteTracker: taste_Map, spotifyLink: data["spotify_link"], appleMusicLink: data["apple_music_link"], youtubeLink: data["youtube_link"], description: data["description"], snippets: snippets_Map);
           // print(CURRENT_USER.uuid);
           // print(CURRENT_USER.likedArtists);
           // print(CURRENT_USER.tasteTracker);

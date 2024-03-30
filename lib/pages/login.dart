@@ -4,6 +4,7 @@ import 'package:songbird/database_management/database_funcs.dart';
 import 'package:songbird/widgets/form_container_widget.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:spotify/spotify.dart' as spotify_api;
+import 'package:songbird/classes/spotifyHelper.dart';
 import 'dart:convert';
 
 
@@ -33,9 +34,9 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    _yourClass = YourClass();
+    //_yourClass = YourClass();
     // Fetch artist information when LoginPage is initialized
-    _yourClass.fetchArtist();
+    //_yourClass.fetchArtist();
   }
 
 
@@ -187,12 +188,31 @@ class YourClass {
 
 Future<void> fetchArtist() async {
   try {
-    final artist = await spotify.artists.get('0OdUWJ0sBjDrqHygGUXeCF');
-    print('FETCHING ARTIST:  ');
-    print('Name: ${artist.name}');
-    print('Genres: ${artist.genres}');
-    
+    final spotify = spotify_api.SpotifyApi(credentials); // Initialize your SpotifyApi object
+
+    final artistId = '7Mtf0UrDmV5JUU5uAziNRA';
+    final artist = await spotify.artists.get(artistId);
+
+    // print('FETCHING ARTIST (DEBUG):');
+    // print('Name: ${artist.name}');
+    // print('Genres: ${artist.genres}');
+    // print('Images: ${artist.images!.first.url}');
+
+    // Specify the market for top tracks (in this example, 'US' for United States)
+    final market = spotify_api.Market.US;
+
+    // Fetch top tracks of the artist
+    var topTracks = await spotify.artists.topTracks(artistId, market);
+    var secondTopTracks = topTracks.toList();
+    print('topTracks: $topTracks');
+    print('topTracks runtime: $topTracks.runtimeType');
+    var lol = secondTopTracks.first.previewUrl;
+    print('$lol');
+    print(secondTopTracks.runtimeType);
   } catch (e) {
     print('Error fetching artist: $e');
   }
-}}
+}
+
+}
+
