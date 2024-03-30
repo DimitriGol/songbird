@@ -111,3 +111,15 @@ Future<Map<String, dynamic>> explorePageMap(String uuid) async
 
     return data;
 }
+
+List<String> getArtistIDs()
+{
+  final firestore = FirebaseFirestore.instance;
+  List<String> artistList = [];
+  firestore.collection("artists").get().then((value) => {
+    for(var docSnapshot in value.docs){
+      artistList.add(docSnapshot.id)
+    }
+  },);
+  return artistList;
+}

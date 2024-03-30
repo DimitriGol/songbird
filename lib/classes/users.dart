@@ -26,26 +26,30 @@ class BaseListener {
     required this.tasteTracker,
   });
 
-  void likeArtist(String artistId) async // I assume artistId is UUID.
+  void handleLike(String artistId) async // I assume artistId is UUID.
   {
     final firestore = FirebaseFirestore.instance;
     likedArtists[artistId] = "";
 
     try
     {
-      if (runtimeType.toString() == "Artist")
+      if (this is Artist)
       {
         DocumentReference userDocRef = firestore.collection("artists").doc(uuid);
         await userDocRef.set({
         'liked_artists': likedArtists,
-        });
+        },
+        SetOptions(merge: true)
+        );
       }
 
-      else if (runtimeType.toString() == "BaseListener"){
-        DocumentReference userDocRef = firestore.collection("artists").doc(uuid);
+      else{
+        DocumentReference userDocRef = firestore.collection("listeners").doc(uuid);
         await userDocRef.set({
         'liked_artists': likedArtists,
-      });
+      }, 
+      
+      SetOptions(merge: true));
       }
 
     } catch (e) {

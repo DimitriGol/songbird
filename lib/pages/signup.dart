@@ -60,7 +60,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 padding: const EdgeInsets.all(8.0),
                 child: FormContainerWidget(
                   controller: _usernameController,
-                  hintText: "Username",
+                  hintText: "Display Name",
                   isPasswordField: false,
                 ),
               ),

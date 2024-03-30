@@ -44,6 +44,7 @@ class MyApp extends StatelessWidget {
         '/home' : (context) => MyHomePage(title: 'Songbird'),
         '/signup' :(context) => SignUpPage(),
         '/login': (context) => LoginPage(),
+        //'/explore' :(context) => ExplorePage(artistUUID: 'ODA5FAaCjCNJ2Nmbtk5NqLpoRsn1')
       },
       theme: ThemeData(
         // This is the theme of your application.
@@ -84,7 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final pages = [
     LikesPage(),
-    ExplorePage(artistUUID: 'ODA5FAaCjCNJ2Nmbtk5NqLpoRsn1'),
+    ExplorePage(artistUUID: 'ZtnDhgH0nIUEWcD5E5CGXrHBrsE3'), //first artist
     ProfilePage()
   ];
 

@@ -130,6 +130,9 @@ class SpotifyHelper
           //print('Image Link:$imageLink');
           imageUrl = imageLink!;
       }
-    } catch (e) {print('Error fetching Image Link: $e');return null;}
+    } catch (e) {
+      print('Error fetching Image Link: $e');
+      return null;
+    }
   }
 }
