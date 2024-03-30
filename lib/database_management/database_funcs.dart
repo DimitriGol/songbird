@@ -1,11 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:songbird/classes/spotifyHelper.dart';
 import 'package:songbird/classes/users.dart';
 import 'package:songbird/main.dart';
 
 void uploadUserToFirestore(String userType, String uuid, String username, String profilePicture, Map<String, dynamic> likedArtists, Map<String, int> tasteTracker, String description, String spotifyLink, String appleMusicLink, String youtubeLink) async{
     final firestore = FirebaseFirestore.instance;
+
+    final SpotifyHelp = SpotifyHelper();
+    final profPic = SpotifyHelp.getArtistImage(uuid);
+    final topTracks = SpotifyHelp.getTopTracks(uuid);
     // CALL SPOTIFY FUNCTION TO RETRIEVE USER TRACKS AND IMAGE
-    profilePicture = ""; //REPLACE THIS EMPTY STRING WITH THE ACTUAL URL
+    profilePicture = "$profPic"; //REPLACE THIS EMPTY STRING WITH THE ACTUAL URL
+
     try {
       if(userType == 'Artist'){
         //UPDATE ARTIST CLASS TO HAVE A DATA MEMBER FOR THE TRACKS TO BE STORED

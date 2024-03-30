@@ -194,12 +194,7 @@ Artist test_artist = Artist(
         print('Artist with UUID $UUID does not exist.');
         return null;
       }
-    }
-    catch (e)
-    {
-      print('Error fetching artist: $e');
-      return null;
-    }
+    }catch (e){print('Error fetching artist: $e');return null;}
   }
 
 Future main() async {
@@ -220,46 +215,62 @@ class YourClass {
   }
 
 
-  Future<void> fetchArtist(String UUID) async {
-  try {
+  Future<void> fetchArtist(String UUID) async 
+  {
+    try {
     // Call getSpotifyLink to retrieve the Spotify link
-    final spotifyLink = await getSpotifyLink(UUID);
+      final spotifyLink = await getSpotifyLink(UUID);
 
     // Use regex to extract artist ID from the Spotify link
-    final RegExp regex = RegExp(r'artist\/([a-zA-Z0-9]+)');
-    final match = regex.firstMatch(spotifyLink ?? '');
+      final RegExp regex = RegExp(r'artist\/([a-zA-Z0-9]+)');
+      final match = regex.firstMatch(spotifyLink ?? '');
 
-    if (match != null) {
-      final artistId = match.group(1); // Extract the artist ID
-      final spotify = spotify_api.SpotifyApi(credentials);
+      if (match != null) {
+        final artistId = match.group(1); // Extract the artist ID
+        final spotify = spotify_api.SpotifyApi(credentials);
 
-      final artist = await spotify.artists.get(artistId!); // Fetch artist using the extracted artist ID
+        final artist = await spotify.artists.get(artistId!); // Fetch artist using the extracted artist ID
 
-      print('FETCHING ARTIST (DEBUG):');
-      print('Name: ${artist.name}');
-      print('Genres: ${artist.genres}');
-      print('Images: ${artist.images!.first.url}');
+        print('FETCHING ARTIST (DEBUG):');
+        print('Name: ${artist.name}');
+        print('Images: ${artist.images!.first.url}');
 
       // Specify the market for top tracks (in this example, 'US' for United States)
-      final market = spotify_api.Market.US;
+        final USA = spotify_api.Market.US;
 
       // Fetch top tracks of the artist
-      final topTracks = await spotify.artists.topTracks(artistId, market);
-      print('Top Tracks:');
-      for (var track in topTracks) {
-        print('${track.name}');
+        final topTracks = await spotify.artists.topTracks(artistId, USA);
+       print('Top Tracks:');
+       for (var track in topTracks) {
+         print('${track.name}');
+        }
+      } else {
+        print('Artist ID not found in the Spotify link.');
       }
-    } else {
-      print('Artist ID not found in the Spotify link.');
+    } catch (e) {print('Error fetching artist: $e');}
+  }
+
+  Future<String?> getArtistName (String UUID) async
+  {
+    try
+    {
+      final spotifyLink = await getSpotifyLink(UUID);
+      final RegExp regex = RegExp(r'artist\/([a-zA-Z0-9]+)');
+      final match = regex.firstMatch(spotifyLink ?? '');
+
+      if (match != null)
+      {
+        final artistId = match.group(1); // Extract the artist ID
+        final spotify = spotify_api.SpotifyApi(credentials);
+        final artist = await spotify.artists.get(artistId!);
+
+        return artist.name;
+      }
+
     }
-  } catch (e) {
-    print('Error fetching artist: $e');
+    catch (e)
+    {
+
+    }
   }
 }
-
-
-
-
-}
-
-
