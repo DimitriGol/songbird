@@ -89,3 +89,21 @@ void getUserDataFromFirestore(String uuid) async{
     }
   }
 }
+
+Future<Map<String, dynamic>> explorePageMap(String uuid) async
+{
+  var data;
+  final firestore = FirebaseFirestore.instance;
+  try{
+      DocumentReference userDocRef = firestore.collection("artists").doc(uuid);
+      await userDocRef.get().then(
+      (DocumentSnapshot doc) {
+          data = doc.data() as Map<String, dynamic>;         
+        }
+    );
+    }catch (e) {
+      print('Error: $e');
+    }
+
+    return data;
+}
