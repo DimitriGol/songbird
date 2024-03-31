@@ -123,3 +123,26 @@ List<String> getArtistIDs()
   },);
   return artistList;
 }
+
+Future<Map<String, String>> likesPageMap(Map<String, dynamic> likedArtists) async 
+{
+  Map<String, String> result = {};
+
+  final firestore = FirebaseFirestore.instance;
+  try{
+    for (var artistID in likedArtists.entries){
+      DocumentReference userDocRef = firestore.collection("artists").doc(artistID.key);
+      await userDocRef.get().then(
+        (DocumentSnapshot doc) {
+          final data = doc.data() as Map<String, dynamic>;       
+          // print(data["username"]);
+          result[data["username"]] = data["profile_pic"];
+        }
+      );
+    }
+    }catch (e) {
+      print('Error: $e');
+    }
+
+  return result;
+}
