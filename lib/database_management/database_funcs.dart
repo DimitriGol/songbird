@@ -55,11 +55,11 @@ void getUserDataFromFirestore(String uuid) async{
         }else{
           final data = doc.data() as Map<String, dynamic>;
 
-          //Map<String, dynamic> artist_Map = Map.from(data["liked_artists"]);
+          LinkedHashMap<String, bool> artist_Map = LinkedHashMap.from(data["liked_artists"]);
 
           Map<String, int> taste_Map = Map.from(data['taste_tracker']);
 
-          CURRENT_USER = BaseListener(uuid: uuid, username: data["username"], profilePicture: data["profile_pic"], likedArtists: data["liked_artists"], tasteTracker: taste_Map);
+          CURRENT_USER = BaseListener(uuid: uuid, username: data["username"], profilePicture: data["profile_pic"], likedArtists: artist_Map, tasteTracker: taste_Map);
         }
       },
     );
@@ -74,11 +74,11 @@ void getUserDataFromFirestore(String uuid) async{
       (DocumentSnapshot doc) {
           final data = doc.data() as Map<String, dynamic>;
 
-          //Map<String, dynamic> artist_Map = Map.from(data["liked_artists"]);
+          LinkedHashMap<String, bool> artist_Map = LinkedHashMap.from(data["liked_artists"]);
           Map<String, String> snippets_Map = Map.from(data["snippets"]);
           Map<String, int> taste_Map = Map.from(data['taste_tracker']);
 
-          CURRENT_USER = Artist(uuid: uuid, username: data["username"], profilePicture: data["profile_pic"], likedArtists: data["liked_artists"], tasteTracker: taste_Map, spotifyLink: data["spotify_link"], appleMusicLink: data["apple_music_link"], youtubeLink: data["youtube_link"], description: data["description"], snippets: snippets_Map);
+          CURRENT_USER = Artist(uuid: uuid, username: data["username"], profilePicture: data["profile_pic"], likedArtists: artist_Map, tasteTracker: taste_Map, spotifyLink: data["spotify_link"], appleMusicLink: data["apple_music_link"], youtubeLink: data["youtube_link"], description: data["description"], snippets: snippets_Map);
         }
     );
     }catch (e) {
@@ -117,21 +117,23 @@ List<String> getArtistIDs()
   return artistList;
 }
 
-Future<Map<String, String>> likesPageMap(Map<String, dynamic> likedArtists) async 
+Future<Map<String, String>> likesPageMap(LinkedHashMap<String, bool> likedArtists) async 
 {
   Map<String, String> result = {};
 
   final firestore = FirebaseFirestore.instance;
   try{
     for (var artistID in likedArtists.entries){
-      DocumentReference userDocRef = firestore.collection("artists").doc(artistID.key);
-      await userDocRef.get().then(
-        (DocumentSnapshot doc) {
-          final data = doc.data() as Map<String, dynamic>;       
-          // print(data["username"]);
-          result[data["username"]] = data["profile_pic"];
-        }
-      );
+      if(artistID.value == true){
+        DocumentReference userDocRef = firestore.collection("artists").doc(artistID.key);
+        await userDocRef.get().then(
+          (DocumentSnapshot doc) {
+            final data = doc.data() as Map<String, dynamic>;       
+            // print(data["username"]);
+            result[data["username"]] = data["profile_pic"];
+          }
+        );
+      }
     }
     }catch (e) {
       print('Error: $e');
