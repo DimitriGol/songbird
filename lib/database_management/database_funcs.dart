@@ -2,8 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:songbird/classes/spotifyHelper.dart';
 import 'package:songbird/classes/users.dart';
 import 'package:songbird/main.dart';
+import 'dart:collection';
 
-void uploadUserToFirestore(String userType, String uuid, String username, String profilePicture, Map<String, dynamic> likedArtists, Map<String, int> tasteTracker, String description, String spotifyLink, String appleMusicLink, String youtubeLink) async{
+void uploadUserToFirestore(String userType, String uuid, String username, String profilePicture, LinkedHashMap<String, bool> likedArtists, Map<String, int> tasteTracker, String description, String spotifyLink, String appleMusicLink, String youtubeLink) async{
     final firestore = FirebaseFirestore.instance;
 
     final SpotifyHelp = SpotifyHelper();
@@ -54,15 +55,11 @@ void getUserDataFromFirestore(String uuid) async{
         }else{
           final data = doc.data() as Map<String, dynamic>;
 
-          Map<String, dynamic> artist_Map = Map.from(data["liked_artists"]);
+          //Map<String, dynamic> artist_Map = Map.from(data["liked_artists"]);
 
           Map<String, int> taste_Map = Map.from(data['taste_tracker']);
 
-          CURRENT_USER = BaseListener(uuid: uuid, username: data["username"], profilePicture: data["profile_pic"], likedArtists: artist_Map, tasteTracker: taste_Map);
-          // print(CURRENT_USER.uuid);
-          // print(CURRENT_USER.likedArtists);
-          // print(CURRENT_USER.tasteTracker);
-          // print(CURRENT_USER.runtimeType);
+          CURRENT_USER = BaseListener(uuid: uuid, username: data["username"], profilePicture: data["profile_pic"], likedArtists: data["liked_artists"], tasteTracker: taste_Map);
         }
       },
     );
@@ -77,15 +74,11 @@ void getUserDataFromFirestore(String uuid) async{
       (DocumentSnapshot doc) {
           final data = doc.data() as Map<String, dynamic>;
 
-          Map<String, dynamic> artist_Map = Map.from(data["liked_artists"]);
+          //Map<String, dynamic> artist_Map = Map.from(data["liked_artists"]);
           Map<String, String> snippets_Map = Map.from(data["snippets"]);
           Map<String, int> taste_Map = Map.from(data['taste_tracker']);
 
-          CURRENT_USER = Artist(uuid: uuid, username: data["username"], profilePicture: data["profile_pic"], likedArtists: artist_Map, tasteTracker: taste_Map, spotifyLink: data["spotify_link"], appleMusicLink: data["apple_music_link"], youtubeLink: data["youtube_link"], description: data["description"], snippets: snippets_Map);
-          // print(CURRENT_USER.uuid);
-          // print(CURRENT_USER.likedArtists);
-          // print(CURRENT_USER.tasteTracker);
-          // print(CURRENT_USER.runtimeType);
+          CURRENT_USER = Artist(uuid: uuid, username: data["username"], profilePicture: data["profile_pic"], likedArtists: data["liked_artists"], tasteTracker: taste_Map, spotifyLink: data["spotify_link"], appleMusicLink: data["apple_music_link"], youtubeLink: data["youtube_link"], description: data["description"], snippets: snippets_Map);
         }
     );
     }catch (e) {

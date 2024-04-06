@@ -8,6 +8,7 @@ import '../firebase_auth/firebase_auth_class.dart';
 import 'login.dart';
 import 'package:songbird/classes/users.dart';
 import 'package:songbird/database_management/database_funcs.dart';
+import 'dart:collection';
 
 class SignupSurveyPage extends StatefulWidget {
   const SignupSurveyPage({super.key, required this.username});
@@ -21,7 +22,8 @@ class _SignupSurveyPageState extends State<SignupSurveyPage> {
   List<String> selectedGenres = [];
   String userType = '';
   String userID = (FirebaseAuth.instance.currentUser?.uid)!;
-  Map<String, dynamic> likedArtistMap = {};
+  //LinkedHashMap<String, bool> likedArtistMap;
+  var likedArtistMap = LinkedHashMap<String, bool>();
   Map<String, int> tasteTrackerMap = {"CLASSICAL": 0, "COUNTRY": 0, "EDM": 0, "HIPHOP": 0, "HOUSE": 0, "POP": 0, "RAP": 0, "R&B" : 0, "ROCK": 0};
 
   // Extra data members for Artist class 
