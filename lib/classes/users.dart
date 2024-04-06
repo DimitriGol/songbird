@@ -2,6 +2,8 @@
 
 //Genre enums
 
+import 'dart:collection';
+
 import 'package:songbird/database_management/database_funcs.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:songbird/main.dart';
@@ -14,7 +16,11 @@ class BaseListener {
   String username;
   //String displayName;
   String profilePicture;
-  Map<String, dynamic> likedArtists;
+  /*This LinkedHashMap member variable will hold Artist Unique IDs as the keys of the map
+    and then a bool to keep track of whether the CURRENT_USER liked or disliked the artist.
+  */
+  LinkedHashMap<String, bool> likedArtists;
+  //Map<String, dynamic> likedArtists;
   Map<String, int> tasteTracker;
 
   BaseListener({
@@ -29,7 +35,38 @@ class BaseListener {
   void handleLike(String artistId) async // I assume artistId is UUID.
   {
     final firestore = FirebaseFirestore.instance;
-    likedArtists[artistId] = "";
+    likedArtists[artistId] = true;
+
+    try
+    {
+      if (this is Artist)
+      {
+        DocumentReference userDocRef = firestore.collection("artists").doc(uuid);
+        await userDocRef.set({
+        'liked_artists': likedArtists,
+        },
+        SetOptions(merge: true)
+        );
+      }
+
+      else{
+        DocumentReference userDocRef = firestore.collection("listeners").doc(uuid);
+        await userDocRef.set({
+        'liked_artists': likedArtists,
+      }, 
+      
+      SetOptions(merge: true));
+      }
+
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  void handleDislike(String artistId) async // I assume artistId is UUID.
+  {
+    final firestore = FirebaseFirestore.instance;
+    likedArtists[artistId] = false;
 
     try
     {

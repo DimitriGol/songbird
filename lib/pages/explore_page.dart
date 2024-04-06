@@ -207,6 +207,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   onPressed: () {
                     // Handle DISLIKE button press
                     String next = idList[random.nextInt(idList.length)];
+                    CURRENT_USER.handleDislike(widget.artistUUID);
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) =>ExplorePage(artistUUID: next, onStartUp: true)),
