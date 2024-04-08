@@ -82,6 +82,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
+  final CupertinoTabController _tabController = CupertinoTabController(initialIndex: 1);
   @override
 Widget build(BuildContext context){
    return CupertinoPageScaffold(
@@ -103,11 +105,13 @@ Widget build(BuildContext context){
       ),
    
   child: CupertinoTabScaffold(
+    controller: _tabController,
     tabBar: CupertinoTabBar(
       iconSize: 40,
       backgroundColor: Colors.blueGrey,
       activeColor: Colors.yellow, // Change the color for active icons
-    inactiveColor: Colors.black, // Change the color for inactive icons
+      inactiveColor: Colors.black, // Change the color for inactive icons
+      currentIndex: 1,
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Icon(Icons.favorite),
