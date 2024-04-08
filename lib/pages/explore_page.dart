@@ -42,33 +42,6 @@ class _ExplorePageState extends State<ExplorePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //  appBar: 
-      //  widget.onStartUp == true
-      //  ? AppBar(
-      //   automaticallyImplyLeading: false,
-      //   backgroundColor:   Colors.yellow,
-      //   title:IconButton(icon: Container(
-      //     width:200,
-      //     height:200,
-      //     child:Image.asset('lib/images/songbird_black_logo_and_text.png')),
-      //   onPressed: ()
-      //    {
-      //     Navigator.pop(context);
-      //    },),
-      //   centerTitle: true,
-      //   actions: <Widget>[
-      //     IconButton(
-      //       icon: Icon(Icons.settings, color: Colors.black,),
-      //       onPressed: () {
-      //         Navigator.push(
-      //           context,
-      //           MaterialPageRoute(builder: (context) => SettingsPage()),
-      //         );
-      //       },
-      //     ),
-      //   ],
-      // )
-      // : null,
       body: 
       FutureBuilder(
         builder: (ctx, snapshot) {
