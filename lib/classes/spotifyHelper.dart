@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:spotify/spotify.dart' as spotify_api;
 import 'package:songbird/main.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 
 Future<String?> getSpotifyLink(String UUID) async {
@@ -38,22 +40,72 @@ Future<String?> getDescription(String UUID) async {
 
 class SpotifyHelper 
 {
-  late final spotify_api.SpotifyApiCredentials credentials;
+  late final String clientID;
+  late final String redirectURI;
   late final spotify_api.SpotifyApi spotify;
+
 
   Map<String, String> trackMaps = {};
   String imageUrl = "";
 
-  SpotifyHelper() {
-    String clientID = dotenv.env['CLIENT_ID']!;
-    String clientSecret = dotenv.env['CLIENT_SECRET']!;
-
-    credentials = spotify_api.SpotifyApiCredentials(clientID, clientSecret);
-    spotify = spotify_api.SpotifyApi(credentials);
+  SpotifyHelper() 
+  {
+    clientID = dotenv.env['CLIENT_ID']!;
+    redirectURI = 'https://www.testURL.com/auth';
+    spotify = spotify_api.SpotifyApi(spotify_api.SpotifyApiCredentials(clientID, ''));
   }
 
-  Future<String?> getArtistName(String link) async {
-    try {
+  Future<void> authorize() async 
+  {
+    final authUri = 'https://accounts.spotify.com/authorize' +
+    '&response_type=token' +
+    '?client_id=$clientID' +
+    '&scope=user-read-email,user-library-read'; 
+    '&redirect_uri=$redirectURI';
+
+
+     await launchUrlString(authUri);
+  }
+
+  Future<void> handleAuthorizationResponse(Uri responseUri) async 
+  {
+
+  if (responseUri.fragment != null) 
+  {
+    final queryParams = Uri.splitQueryString(responseUri.fragment!);
+    final accessToken = queryParams['access_token'];
+    
+    if (accessToken != null) {
+      // Use the access token to make authorized requests to the Spotify API
+      final authenticatedSpotify = spotify_api.SpotifyApi(spotify_api.SpotifyApiCredentials(accessToken, ''));
+
+      // Example: Fetch user profile
+      final userProfile = await authenticatedSpotify.me.get();
+      print('User profile: $userProfile');
+      
+      // Perform additional actions, such as fetching user data or navigating to a new screen.
+    } else {
+      // Authorization failed, handle the error
+      final error = queryParams['error'];
+      final errorDescription = queryParams['error_description'];
+      print('Authorization failed: $error - $errorDescription');
+      
+      // Handle error, such as displaying an error message to the user.
+    }
+  } 
+  else 
+  {
+    // Handle error - response doesn't contain fragment (access token)
+    print('Invalid authorization response.');
+    // Handle the error, such as displaying an error message to the user or redirecting to the authorization screen.
+  }
+ }
+
+
+  Future<String?> getArtistName(String link) async 
+  {
+    try 
+    {
       final spotifyLink = link;
       final RegExp regex = RegExp(r'artist\/([a-zA-Z0-9]+)');
       final match = regex.firstMatch(spotifyLink ?? '');
@@ -108,10 +160,11 @@ class SpotifyHelper
         print('getTopTracks Function: Artist ID not found in the Spotify link.');
         return null;
     }
-    } catch (e) {
+    } catch (e) 
+    {
       print('Error fetching top tracks: $e');
       //return null;
-      }
+    }
   }
 
   Future<void> getArtistImage (String link) async
