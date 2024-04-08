@@ -93,6 +93,8 @@ class _LikesPageState extends State<LikesPage> {
           },
           future: likesPageMap(CURRENT_USER.likedArtists), 
         )
+
+        
     );
   }
 }
