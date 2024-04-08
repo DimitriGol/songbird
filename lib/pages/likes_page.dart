@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:songbird/database_management/database_funcs.dart';
 import 'package:songbird/main.dart';
 import 'package:songbird/classes/users.dart';
+import 'package:songbird/pages/explore_page.dart';
+
 
 class LikesPage extends StatefulWidget
 {
@@ -39,6 +41,8 @@ class _LikesPageState extends State<LikesPage> {
               else if (snapshot.hasData) {
                 // Extracting data from snapshot object
                 final artistData = snapshot.data as Map<String, String>;
+                
+                // No liked artists, have message saying the list is empty
                 if (artistData.isEmpty){
                   return(
                     Center(
@@ -49,6 +53,7 @@ class _LikesPageState extends State<LikesPage> {
                       )
                   );
                 }
+                // Output list of artists
                 else{
                   // print(artistData);
                   return Padding(
@@ -69,18 +74,21 @@ class _LikesPageState extends State<LikesPage> {
                               )
                             ),
                             //display artist name
-                            title: Text(artistName, style: TextStyle(fontWeight: FontWeight.bold)), 
-                            trailing: IconButton(
-                              icon: Container(
-                              child: Icon(Icons.favorite_sharp, color: Colors.red.shade700)),
-                              onPressed: ()
-                              {
-                                CURRENT_USER.likedArtists.remove(entry.key);
-                                // print(CURRENT_USER.likedArtists);
+                            title: InkWell(
+                              child: Text(artistName, style: TextStyle(fontWeight: FontWeight.bold)),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => ExplorePage(artistUUID: 'ZtnDhgH0nIUEWcD5E5CGXrHBrsE3', onStartUp: false)),
+                                );
                               },
                             ),
+                            trailing: Icon(
+                              Icons.favorite_sharp,
+                              color: Colors.red.shade700,
+                            ),
                           );
-                        }).toList() //loop ends
+                        }).toList()
                       ),
                     ),
                   );
