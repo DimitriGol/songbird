@@ -70,12 +70,17 @@ class _LikesPageState extends State<LikesPage> {
                             ),
                             //display artist name
                             title: Text(artistName, style: TextStyle(fontWeight: FontWeight.bold)), 
-                            trailing: Icon(
-                              Icons.favorite_sharp,
-                              color: Colors.red.shade700,
+                            trailing: IconButton(
+                              icon: Container(
+                              child: Icon(Icons.favorite_sharp, color: Colors.red.shade700)),
+                              onPressed: ()
+                              {
+                                CURRENT_USER.likedArtists.remove(entry.key);
+                                // print(CURRENT_USER.likedArtists);
+                              },
                             ),
                           );
-                        }).toList()
+                        }).toList() //loop ends
                       ),
                     ),
                   );
