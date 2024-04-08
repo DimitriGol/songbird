@@ -11,8 +11,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:songbird/database_management/database_funcs.dart';
+import 'dart:math';
+import 'package:flutter/cupertino.dart';
 
 dynamic CURRENT_USER; //global variable to be assigned a user class later on in program flow
+ 
 
 void main() async{
   await dotenv.load(fileName: "assets/.env");
@@ -71,80 +74,162 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
   final String title;
+  
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
-  int currentIndex = 1;
-
-
-  final pages = [
-    LikesPage(),
-    ExplorePage(artistUUID: 'ZtnDhgH0nIUEWcD5E5CGXrHBrsE3', onStartUp: false), //first artist
-    ProfilePage()
-  ];
-
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor:   Colors.yellow,
-        title:IconButton(icon: Container(
-          width:200,
-          height:200,
-          child:Image.asset('lib/images/songbird_black_logo_and_text.png')),
-        onPressed: ()
-         {},),
-        centerTitle: true,
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.settings, color: Colors.black,),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SettingsPage()),
-              );
-            },
-          ),
-        ],
-      ),
-      body: pages[currentIndex],
+Widget build(BuildContext context){
+   return CupertinoPageScaffold(
+      navigationBar: CupertinoNavigationBar(
+        backgroundColor: Colors.yellow,
+        leading: SizedBox(
+          height: 200,
+          child:  Center(child: Image.asset('lib/images/songbird_black_logo_and_text.png'))),
 
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.blueGrey,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        iconSize: 35,
-        unselectedItemColor: Colors.black,
-        selectedItemColor:   Colors.yellow,
-        currentIndex: currentIndex,
-        onTap: (index) => setState(() => currentIndex = index),
-        items: [
+        trailing: CupertinoButton(
+          child: Icon(Icons.settings),
+          onPressed: () {
+            Navigator.push(
+              context,
+              CupertinoPageRoute(builder: (context) => SettingsPage()),
+            );
+          },
+        ),
+      ),
+   
+  child: CupertinoTabScaffold(
+    tabBar: CupertinoTabBar(
+      iconSize: 40,
+      backgroundColor: Colors.blueGrey,
+      activeColor: Colors.yellow, // Change the color for active icons
+    inactiveColor: Colors.black, // Change the color for inactive icons
+      items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Icon(Icons.favorite),
-          label: 'Likes',
+          //label: 'Liked',
           ),
          
           BottomNavigationBarItem(
           icon: Icon(Icons.music_note),
-          label: 'Discover',
+          //label: 'Explore',
           ),
 
            BottomNavigationBarItem(
           icon: Icon(Icons.account_circle),
-          label: 'Account',
+          //label: 'Profile',
           ),
 
+  ]), tabBuilder: (context, index)
+  {
+    switch(index){
+      case 0:
+        return CupertinoTabView(builder: (context){
+          return CupertinoPageScaffold(child: LikesPage());
+        });
+      case 1:
+          return CupertinoTabView(builder: (context){
+            return CupertinoPageScaffold(child: ExplorePage(artistUUID: 'ZtnDhgH0nIUEWcD5E5CGXrHBrsE3', onStartUp: false));
+          });
+      case 2:
+          return CupertinoTabView(builder: (context){
+            return CupertinoPageScaffold(child: ProfilePage());
+          });
 
-      ],),
-
-    );
+      default: return CupertinoTabView(builder: (context){
+        return CupertinoPageScaffold(child: LikesPage());
+      });
+    }
   }
+ 
+  )
+   );
 }
+
+}
+
+
+// class _MyHomePageState extends State<MyHomePage> {
+
+//    void updateCurrentIndex(int index) {
+//     setState(() {
+//       currentIndex = index;
+//     });
+//   }
+ 
+//   var idList = getArtistIDs();
+//   final random = Random();
+  
+
+//   int currentIndex = 1;
+//   final pages = [
+//     LikesPage(),
+//     ExplorePage(artistUUID: 'ZtnDhgH0nIUEWcD5E5CGXrHBrsE3', onStartUp: false), //first artist
+//     ProfilePage()
+//   ];
+
+
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         automaticallyImplyLeading: false,
+//         backgroundColor:   Colors.yellow,
+//         title:IconButton(icon: Container(
+//           width:200,
+//           height:200,
+//           child:Image.asset('lib/images/songbird_black_logo_and_text.png')),
+//         onPressed: ()
+//          {},),
+//         centerTitle: true,
+//         actions: <Widget>[
+//           IconButton(
+//             icon: Icon(Icons.settings, color: Colors.black,),
+//             onPressed: () {
+//               Navigator.push(
+//                 context,
+//                 MaterialPageRoute(builder: (context) => SettingsPage()),
+//               );
+//             },
+//           ),
+//         ],
+//       ),
+//       body: pages[currentIndex],
+
+//       bottomNavigationBar: BottomNavigationBar(
+//         type: BottomNavigationBarType.fixed,
+//         backgroundColor: Colors.blueGrey,
+//         showSelectedLabels: false,
+//         showUnselectedLabels: false,
+//         iconSize: 35,
+//         unselectedItemColor: Colors.black,
+//         selectedItemColor:   Colors.yellow,
+//         currentIndex: currentIndex,
+//         onTap: (index) => setState(() => currentIndex = index),
+//         items: [
+//         BottomNavigationBarItem(
+//           icon: Icon(Icons.favorite),
+//           label: 'Likes',
+//           ),
+         
+//           BottomNavigationBarItem(
+//           icon: Icon(Icons.music_note),
+//           label: 'Discover',
+//           ),
+
+//            BottomNavigationBarItem(
+//           icon: Icon(Icons.account_circle),
+//           label: 'Account',
+//           ),
+
+
+//       ],),
+
+//     );
+//   }
+// }

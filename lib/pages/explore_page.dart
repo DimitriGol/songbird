@@ -28,6 +28,13 @@ class ExplorePage extends StatefulWidget
 class _ExplorePageState extends State<ExplorePage> {
   final style = TextStyle(fontSize: 60, fontWeight: FontWeight.bold);
   final description = TextStyle(fontSize: 16, color: Colors.white);
+  int currentIndex = 1;
+
+  final pages = [
+    LikesPage(),
+    ExplorePage(artistUUID: 'ZtnDhgH0nIUEWcD5E5CGXrHBrsE3', onStartUp: false), //first artist
+    ProfilePage()
+  ];
 
 
 
@@ -35,33 +42,33 @@ class _ExplorePageState extends State<ExplorePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       appBar: 
-       widget.onStartUp == true
-       ? AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor:   Colors.yellow,
-        title:IconButton(icon: Container(
-          width:200,
-          height:200,
-          child:Image.asset('lib/images/songbird_black_logo_and_text.png')),
-        onPressed: ()
-         {
-          Navigator.pop(context);
-         },),
-        centerTitle: true,
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.settings, color: Colors.black,),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SettingsPage()),
-              );
-            },
-          ),
-        ],
-      )
-      : null,
+      //  appBar: 
+      //  widget.onStartUp == true
+      //  ? AppBar(
+      //   automaticallyImplyLeading: false,
+      //   backgroundColor:   Colors.yellow,
+      //   title:IconButton(icon: Container(
+      //     width:200,
+      //     height:200,
+      //     child:Image.asset('lib/images/songbird_black_logo_and_text.png')),
+      //   onPressed: ()
+      //    {
+      //     Navigator.pop(context);
+      //    },),
+      //   centerTitle: true,
+      //   actions: <Widget>[
+      //     IconButton(
+      //       icon: Icon(Icons.settings, color: Colors.black,),
+      //       onPressed: () {
+      //         Navigator.push(
+      //           context,
+      //           MaterialPageRoute(builder: (context) => SettingsPage()),
+      //         );
+      //       },
+      //     ),
+      //   ],
+      // )
+      // : null,
       body: 
       FutureBuilder(
         builder: (ctx, snapshot) {
@@ -85,7 +92,7 @@ class _ExplorePageState extends State<ExplorePage> {
         var snippetList = snippets_Map.entries.toList();
 
         var idList = getArtistIDs();
-        final random = new Random();
+        final random = Random();
 
         return Stack(
         children: [
@@ -253,6 +260,7 @@ class _ExplorePageState extends State<ExplorePage> {
         ],
       );
 
+
     
       }
 
@@ -267,6 +275,7 @@ class _ExplorePageState extends State<ExplorePage> {
 
      future: explorePageMap(widget.artistUUID), 
   )
+
     );
   }
   
