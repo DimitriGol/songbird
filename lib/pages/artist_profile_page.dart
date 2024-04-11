@@ -101,7 +101,10 @@ class _ArtistProfilePageState extends State<ArtistProfilePage> {
                                 // Dislike Button 
                                 ElevatedButton.icon(
                                   onPressed: () {
+                                    // Removes artist from likedArtist map
                                     CURRENT_USER.handleDislike(widget.artistUUID);
+
+                                    //Redirects user to likes page
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(builder: (context) => LikesPage()),
