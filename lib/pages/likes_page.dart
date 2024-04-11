@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:songbird/database_management/database_funcs.dart';
 import 'package:songbird/main.dart';
 import 'package:songbird/classes/users.dart';
+import 'package:songbird/pages/explore_page.dart';
+
 
 class LikesPage extends StatefulWidget
 {
@@ -38,7 +40,9 @@ class _LikesPageState extends State<LikesPage> {
               // if we got our data
               else if (snapshot.hasData) {
                 // Extracting data from snapshot object
-                final artistData = snapshot.data as Map<String, String>;
+                final artistData = snapshot.data as Map<String, Map<String,String>>;
+                
+                // No liked artists, have message saying the list is empty
                 if (artistData.isEmpty){
                   return(
                     Center(
@@ -49,6 +53,7 @@ class _LikesPageState extends State<LikesPage> {
                       )
                   );
                 }
+                // Output list of artists
                 else{
                   // print(artistData);
                   return Padding(
@@ -56,7 +61,9 @@ class _LikesPageState extends State<LikesPage> {
                     child: Center(
                       child: ListView(
                         children: artistData.entries.map((entry) {
-                          String artistName = entry.key;
+                          String artistUUID = entry.key;
+                          String artistName = entry.value["username"]!;
+                          String artistProfilePicture = entry.value["profile_pic"]!;
 
                           // getUserDataFromFirestore(artistUUID);
                           return ListTile(
@@ -65,11 +72,19 @@ class _LikesPageState extends State<LikesPage> {
                               backgroundColor: Colors.grey,
                               //display artist profile picture
                               backgroundImage: NetworkImage(
-                                entry.value
+                                artistProfilePicture
                               )
                             ),
                             //display artist name
-                            title: Text(artistName, style: TextStyle(fontWeight: FontWeight.bold)), 
+                            title: InkWell(
+                              child: Text(artistName, style: TextStyle(fontWeight: FontWeight.bold)),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => ExplorePage(artistUUID: artistUUID, onStartUp: false)),
+                                );
+                              },
+                            ),
                             trailing: Icon(
                               Icons.favorite_sharp,
                               color: Colors.red.shade700,
@@ -82,14 +97,12 @@ class _LikesPageState extends State<LikesPage> {
                 }
               }
             }
-          return Center(
-            child: CircularProgressIndicator(),
-          );
+            return Center(
+              child: CircularProgressIndicator(),
+            );
           },
           future: likesPageMap(CURRENT_USER.likedArtists), 
-        )
-
-        
+        )  
     );
   }
 }
