@@ -83,21 +83,38 @@ class _ArtistProfilePageState extends State<ArtistProfilePage> {
                                 SizedBox(height: 8),
                                 buildSnippetLink(snippetList[2]),
                                 SizedBox(height: 8),
-                                ElevatedButton.icon(
-                                  onPressed: () {
-                                    launchUrl(Uri.parse(artistData["spotify_link"]));
-                                  },
-                                  icon: Icon(FontAwesomeIcons.spotify, color: Colors.white),
-                                  label: Text(
-                                    'Check Out My Spotify',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.green,
-                                  ),
+                                // ElevatedButton.icon(
+                                //   onPressed: () {
+                                //     launchUrl(Uri.parse(artistData["spotify_link"]));
+                                //   },
+                                //   icon: Icon(FontAwesomeIcons.spotify, color: Colors.white),
+                                //   label: Text(
+                                //     'Check Out My Spotify',
+                                //     style: TextStyle(color: Colors.white),
+                                //   ),
+                                //   style: ElevatedButton.styleFrom(
+                                //     backgroundColor: Colors.green,
+                                //   ),
+                                // ),
+                                Text(
+                                  "Check out my social media!"
+                                ),
+                                SizedBox(height: 20),
+
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    buildSocialIcon(FontAwesomeIcons.spotify),
+                                    const SizedBox(width: 12),
+                                    buildSocialIcon(FontAwesomeIcons.apple),
+                                    const SizedBox(width: 12),
+                                    buildSocialIcon(FontAwesomeIcons.instagram),
+                                    const SizedBox(width: 12),
+                                    buildSocialIcon(FontAwesomeIcons.youtube),
+
+                                  ],
                                 ),
                                 SizedBox(height: 40),
-
                                 // Dislike Button 
                                 ElevatedButton.icon(
                                   onPressed: () {
@@ -156,4 +173,18 @@ class _ArtistProfilePageState extends State<ArtistProfilePage> {
       )
     );
   }
+
+  Widget buildSocialIcon(IconData icon) => CircleAvatar(
+      radius: 20,
+      backgroundColor: Colors.yellow,
+      child: Material(
+        shape: CircleBorder(),
+        clipBehavior: Clip.hardEdge,
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () {}, //does nothing at the moment
+          child: Center(child: Icon(icon, size: 25)),
+        ),
+      ),
+    );
 }
