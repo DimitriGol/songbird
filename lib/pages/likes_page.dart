@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:songbird/database_management/database_funcs.dart';
 import 'package:songbird/main.dart';
 import 'package:songbird/classes/users.dart';
-import 'package:songbird/pages/explore_page.dart';
+import 'package:songbird/pages/artist_profile_page.dart';
 
 
 class LikesPage extends StatefulWidget
@@ -57,7 +57,7 @@ class _LikesPageState extends State<LikesPage> {
                 else{
                   // print(artistData);
                   return Padding(
-                    padding: const EdgeInsets.all(8.0), // Set the padding for the entire ListView
+                    padding: const EdgeInsets.all(10.0), // Set the padding for the entire ListView
                     child: Center(
                       child: ListView(
                         children: artistData.entries.map((entry) {
@@ -66,28 +66,27 @@ class _LikesPageState extends State<LikesPage> {
                           String artistProfilePicture = entry.value["profile_pic"]!;
 
                           // getUserDataFromFirestore(artistUUID);
-                          return ListTile(
-                            leading: CircleAvatar(
-                              radius: 23,
-                              backgroundColor: Colors.grey,
-                              //display artist profile picture
-                              backgroundImage: NetworkImage(
-                                artistProfilePicture
-                              )
-                            ),
-                            //display artist name
-                            title: InkWell(
-                              child: Text(artistName, style: TextStyle(fontWeight: FontWeight.bold)),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => ExplorePage(artistUUID: artistUUID, onStartUp: false)),
-                                );
-                              },
-                            ),
-                            trailing: Icon(
-                              Icons.favorite_sharp,
-                              color: Colors.red.shade700,
+                          return InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => ArtistProfilePage(artistUUID: artistUUID)),
+                              );
+                            },
+                            child: ListTile(
+                              leading: CircleAvatar(
+                                radius: 23,
+                                backgroundColor: Colors.grey,
+                                //display artist profile picture
+                                backgroundImage: NetworkImage(
+                                  artistProfilePicture
+                                )
+                              ),
+                              //display artist name
+                              title: Text(
+                                artistName, 
+                                style: TextStyle(fontWeight: FontWeight.bold)
+                              ),
                             ),
                           );
                         }).toList()
