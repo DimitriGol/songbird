@@ -23,10 +23,10 @@ class FirebaseAuthService {
       UserCredential credential = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
       return credential.user;
-    } on FirebaseAuthException {
-      print("Some error occured");
+    } on FirebaseAuthException catch(e) { 
+      print(e);
+      rethrow;
     }
-    return null;
   }
 
   Future<void> signOut(BuildContext context) async {
