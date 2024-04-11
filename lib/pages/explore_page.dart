@@ -186,7 +186,7 @@ class _ExplorePageState extends State<ExplorePage> {
                 ElevatedButton(
                   onPressed: () {
                     // Handle DISLIKE button press
-                    String next = idList[random.nextInt(idList.length)];
+                    String next = idList[random.nextInt(idList.length-1)];
                     CURRENT_USER.handleDislike(widget.artistUUID);
                     Navigator.push(
                       context,
@@ -208,7 +208,7 @@ class _ExplorePageState extends State<ExplorePage> {
                 ElevatedButton(
                   onPressed: () {
                     // Handle LIKE button press
-                    String next = idList[random.nextInt(idList.length)];
+                    String next = idList[random.nextInt(idList.length-1)];
                     CURRENT_USER.handleLike(widget.artistUUID);
                     Navigator.push(
                       context,
