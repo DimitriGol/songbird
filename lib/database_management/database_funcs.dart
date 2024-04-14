@@ -95,7 +95,7 @@ Future<Map<String, dynamic>> explorePageMap(String uuid) async
       DocumentReference userDocRef = firestore.collection("artists").doc(uuid);
       await userDocRef.get().then(
       (DocumentSnapshot doc) {
-          data = doc.data() as Map<String, dynamic>;         
+          data = doc.data() as Map<String, dynamic>;
         }
     );
     }catch (e) {
@@ -111,9 +111,12 @@ List<String> getArtistIDs()
   List<String> artistList = [];
   firestore.collection("artists").get().then((value) => {
     for(var docSnapshot in value.docs){
-      artistList.add(docSnapshot.id)
+      if(CURRENT_USER.likedArtists.containsKey(docSnapshot.id) == false){
+        artistList.add(docSnapshot.id)
+      }
     }
-  },);
+  },
+  );
   return artistList;
 }
 
