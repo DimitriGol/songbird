@@ -29,6 +29,7 @@ class _ExplorePageState extends State<ExplorePage> {
   final style = TextStyle(fontSize: 60, fontWeight: FontWeight.bold);
   final description = TextStyle(fontSize: 16, color: Colors.white);
   int currentIndex = 1;
+  var idList;
 
   final pages = [
     LikesPage(),
@@ -36,7 +37,10 @@ class _ExplorePageState extends State<ExplorePage> {
     ProfilePage()
   ];
 
-
+  // @override
+  // void initState(){
+  //   super.initState();
+  // }
 
 
   @override
@@ -64,7 +68,7 @@ class _ExplorePageState extends State<ExplorePage> {
         Map<String, String> snippets_Map = Map.from(artistData["snippets"]);
         var snippetList = snippets_Map.entries.toList();
 
-        var idList = getArtistIDs();
+        idList = getArtistIDs();
         final random = Random();
 
         return Stack(
