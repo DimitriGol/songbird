@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:songbird/database_management/database_funcs.dart';
 import 'package:songbird/main.dart';
-import 'package:songbird/classes/users.dart';
 import 'package:songbird/pages/likes_page.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:dots_indicator/dots_indicator.dart';
 
 class ArtistProfilePage extends StatefulWidget
 {
@@ -20,6 +21,7 @@ class _ArtistProfilePageState extends State<ArtistProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(), //makes back button appear
       body: 
         FutureBuilder(
           builder: (context, snapshot) {
@@ -39,7 +41,9 @@ class _ArtistProfilePageState extends State<ArtistProfilePage> {
                 final artistData = snapshot.data as Map<String, dynamic>;
                 Map<String, String> snippets_Map = Map.from(artistData["snippets"]);
                 var snippetList = snippets_Map.entries.toList(); 
-                
+                var currentIndex = 0;
+                CarouselController controller = CarouselController();
+
 
                 return Stack(
                   children: [
@@ -50,71 +54,92 @@ class _ArtistProfilePageState extends State<ArtistProfilePage> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                               children: [
+
+                                // Artist Profile Picture
+                                CircleAvatar(
+                                  backgroundImage: NetworkImage(artistData["profile_pic"]),
+                                  radius: 100,
+                                ),
+
                                 // Artist Name
                                 FittedBox(
                                   fit: BoxFit.fitWidth,
                                   child: Text(
                                     artistData["username"],
-                                    style: TextStyle(fontSize: 30, color: Colors.black87, fontWeight: FontWeight.bold),
+                                    style: TextStyle(fontSize: 40, color: Colors.black87, fontWeight: FontWeight.bold),
                                   ),
                                 ),
-                                SizedBox(height: 8),
-
-                                // Artist Profile Picture
-                                Image.network(
-                                  artistData["profile_pic"],
-                                  width: 200,
-                                  height: 200,
-                                ),
-                                SizedBox(height: 3),
+                                SizedBox(height: 1),
 
                                 // Artist Description
                                 Text(
                                   artistData["description"],
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(fontSize: 16, color: const Color.fromARGB(205, 0, 0, 0)), 
+                                  style: TextStyle(fontSize: 15, color: const Color.fromARGB(205, 0, 0, 0)), 
                                 ),
-                                SizedBox(height: 10),
-
-                                // Artist Snippets + Spotify Link
-                                buildSnippetLink(snippetList[0]),
                                 SizedBox(height: 8),
-                                buildSnippetLink(snippetList[1]),
-                                SizedBox(height: 8),
-                                buildSnippetLink(snippetList[2]),
-                                SizedBox(height: 8),
-                                // ElevatedButton.icon(
-                                //   onPressed: () {
-                                //     launchUrl(Uri.parse(artistData["spotify_link"]));
-                                //   },
-                                //   icon: Icon(FontAwesomeIcons.spotify, color: Colors.white),
-                                //   label: Text(
-                                //     'Check Out My Spotify',
-                                //     style: TextStyle(color: Colors.white),
-                                //   ),
-                                //   style: ElevatedButton.styleFrom(
-                                //     backgroundColor: Colors.green,
-                                //   ),
-                                // ),
-                                Text(
-                                  "Check out my social media!"
-                                ),
-                                SizedBox(height: 20),
-
+                                
+                                //Social Media Icons
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    buildSocialIcon(FontAwesomeIcons.spotify),
+                                    buildSocialIcon(FontAwesomeIcons.spotify, artistData["spotify_link"]),
                                     const SizedBox(width: 12),
-                                    buildSocialIcon(FontAwesomeIcons.apple),
+                                    buildSocialIcon(FontAwesomeIcons.apple, ""),
                                     const SizedBox(width: 12),
-                                    buildSocialIcon(FontAwesomeIcons.instagram),
+                                    buildSocialIcon(FontAwesomeIcons.instagram, ""),
                                     const SizedBox(width: 12),
-                                    buildSocialIcon(FontAwesomeIcons.youtube),
+                                    buildSocialIcon(FontAwesomeIcons.youtube, ""),
 
                                   ],
                                 ),
+                                SizedBox(height: 20),
+                                
+                                // Snippets
+                                Stack(
+                                  alignment: AlignmentDirectional.topCenter,
+                                  children: [
+                                    CarouselSlider(
+                                      carouselController: controller,
+                                      options: CarouselOptions(
+                                        height: 180.0,
+                                        enableInfiniteScroll: false,
+                                        initialPage: 0,
+                                        enlargeCenterPage: true,
+                                        enlargeFactor: 0.3,
+                                      ),
+                                      items: snippetList.map((snippet) {
+                                        return Builder(
+                                          builder: (BuildContext context) {
+                                            return InkWell(
+                                              child: Container(
+                                                width: MediaQuery.of(context).size.width,
+                                                margin: EdgeInsets.symmetric(horizontal: 5.0),
+                                                decoration: BoxDecoration(
+                                                  color: Color.fromARGB(255, 255, 223, 83)
+                                                ),
+                                                child: Center(
+                                                  child: Text(
+                                                    snippet.key, 
+                                                    style: TextStyle(
+                                                      fontSize: 16.0,
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              onTap: () {
+                                                launchUrl(Uri.parse(snippet.value));
+                                              },
+                                            );
+                                          },
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ],
+                                ),
                                 SizedBox(height: 40),
+                                
                                 // Dislike Button 
                                 ElevatedButton.icon(
                                   onPressed: () {
@@ -174,17 +199,19 @@ class _ArtistProfilePageState extends State<ArtistProfilePage> {
     );
   }
 
-  Widget buildSocialIcon(IconData icon) => CircleAvatar(
-      radius: 20,
-      backgroundColor: Colors.yellow,
-      child: Material(
-        shape: CircleBorder(),
-        clipBehavior: Clip.hardEdge,
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: () {}, //does nothing at the moment
-          child: Center(child: Icon(icon, size: 25)),
-        ),
+  Widget buildSocialIcon(IconData icon, String link) => CircleAvatar(
+    radius: 25,
+    backgroundColor: Colors.yellow,
+    child: Material(
+      shape: CircleBorder(),
+      clipBehavior: Clip.hardEdge,
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () {
+          launchUrl(Uri.parse(link));
+        }, //does nothing at the moment
+        child: Center(child: Icon(icon, size: 28)),
       ),
-    );
+    ),
+  );
 }

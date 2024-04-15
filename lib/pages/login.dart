@@ -137,7 +137,7 @@ class _LoginPageState extends State<LoginPage> {
     try{
       user = await _auth.signInWithEmailAndPassword(email, password);
     } catch(e) {
-      print(e);
+      // print(e);
       if (e is FirebaseAuthException){
         showDialog(
           context: context,
@@ -164,7 +164,7 @@ class _LoginPageState extends State<LoginPage> {
       }
       return;
     }
-    
+
     if (user != null) {
       String userID = (FirebaseAuth.instance.currentUser?.uid)!;
       getUserDataFromFirestore(userID);
