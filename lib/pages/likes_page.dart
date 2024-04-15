@@ -74,6 +74,7 @@ class _LikesPageState extends State<LikesPage> {
                               );
                             },
                             child: ListTile(
+                              minVerticalPadding: 15,
                               leading: CircleAvatar(
                                 radius: 23,
                                 backgroundColor: Colors.grey,
@@ -85,7 +86,10 @@ class _LikesPageState extends State<LikesPage> {
                               //display artist name
                               title: Text(
                                 artistName, 
-                                style: TextStyle(fontWeight: FontWeight.bold)
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold, 
+                                  fontSize: 17
+                                )
                               ),
                             ),
                           );
