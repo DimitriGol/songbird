@@ -95,7 +95,7 @@ Future<Map<String, dynamic>> explorePageMap(String uuid) async
       DocumentReference userDocRef = firestore.collection("artists").doc(uuid);
       await userDocRef.get().then(
       (DocumentSnapshot doc) {
-          data = doc.data() as Map<String, dynamic>;         
+          data = doc.data() as Map<String, dynamic>;
         }
     );
     }catch (e) {
@@ -111,15 +111,18 @@ List<String> getArtistIDs()
   List<String> artistList = [];
   firestore.collection("artists").get().then((value) => {
     for(var docSnapshot in value.docs){
-      artistList.add(docSnapshot.id)
+      if(CURRENT_USER.likedArtists.containsKey(docSnapshot.id) == false){
+        artistList.add(docSnapshot.id)
+      }
     }
-  },);
+  },
+  );
   return artistList;
 }
 
-Future<Map<String, String>> likesPageMap(LinkedHashMap<String, bool> likedArtists) async 
+Future<Map<String, Map<String, String>>> likesPageMap(LinkedHashMap<String, bool> likedArtists) async 
 {
-  Map<String, String> result = {};
+ Map<String, Map<String, String>> result = {};
 
   final firestore = FirebaseFirestore.instance;
   try{
@@ -128,9 +131,15 @@ Future<Map<String, String>> likesPageMap(LinkedHashMap<String, bool> likedArtist
         DocumentReference userDocRef = firestore.collection("artists").doc(artistID.key);
         await userDocRef.get().then(
           (DocumentSnapshot doc) {
-            final data = doc.data() as Map<String, dynamic>;       
-            // print(data["username"]);
-            result[data["username"]] = data["profile_pic"];
+            final data = doc.data() as Map<String, dynamic>;
+            // print(artistID.key);
+            // print(data["username"]);                     
+            // print(data["profile_pic"]);  
+
+            result[artistID.key] = {
+              "username": data["username"],
+              "profile_pic": data["profile_pic"],
+            };
           }
         );
       }
