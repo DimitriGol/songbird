@@ -49,15 +49,12 @@ class _ArtistProfilePageState extends State<ArtistProfilePage> {
                         GestureDetector(
                           behavior: HitTestBehavior.translucent,
                           onTap:() {
-                            print("PREESSSSSSSSSSSSSSSSSSSSSS");
                             Navigator.pop(
                                             context);
                                            
                           },
                           child: 
                           Container(
-                            //decoration: BoxDecoration(border: Border.all()),
-                           // alignment: Alignment.center,
                             child: Icon(
                               Icons.arrow_back_ios_new_rounded,
                             ),
