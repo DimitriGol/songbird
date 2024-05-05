@@ -51,16 +51,16 @@ class SpotifyHelper
   SpotifyHelper() 
   {
     clientID = dotenv.env['CLIENT_ID']!;
-    redirectURI = 'https://www.testURL.com/auth';
+    redirectURI = 'https://www.google.com';
     spotify = spotify_api.SpotifyApi(spotify_api.SpotifyApiCredentials(clientID, ''));
   }
 
   Future<void> authorize() async 
   {
     final authUri = 'https://accounts.spotify.com/authorize' +
-    '&response_type=token' +
-    '?client_id=$clientID' +
-    '&scope=user-read-email,user-library-read'; 
+    '?response_type=token' +
+    '&client_id=$clientID' +
+    '&scope=user-read-email,user-library-read' +
     '&redirect_uri=$redirectURI';
 
 
