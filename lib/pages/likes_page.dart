@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:songbird/database_management/database_funcs.dart';
 import 'package:songbird/main.dart';
 import 'package:songbird/classes/users.dart';
+import 'package:songbird/pages/artist_profile_page.dart';
+import 'package:flutter/cupertino.dart';
+
 
 class LikesPage extends StatefulWidget
 {
@@ -38,7 +41,9 @@ class _LikesPageState extends State<LikesPage> {
               // if we got our data
               else if (snapshot.hasData) {
                 // Extracting data from snapshot object
-                final artistData = snapshot.data as Map<String, String>;
+                final artistData = snapshot.data as Map<String, Map<String,String>>;
+                
+                // No liked artists, have message saying the list is empty
                 if (artistData.isEmpty){
                   return(
                     Center(
@@ -49,30 +54,44 @@ class _LikesPageState extends State<LikesPage> {
                       )
                   );
                 }
+                // Output list of artists
                 else{
                   // print(artistData);
                   return Padding(
-                    padding: const EdgeInsets.all(8.0), // Set the padding for the entire ListView
+                    padding: const EdgeInsets.all(10.0), // Set the padding for the entire ListView
                     child: Center(
                       child: ListView(
                         children: artistData.entries.map((entry) {
-                          String artistName = entry.key;
+                          String artistUUID = entry.key;
+                          String artistName = entry.value["username"]!;
+                          String artistProfilePicture = entry.value["profile_pic"]!;
 
                           // getUserDataFromFirestore(artistUUID);
-                          return ListTile(
-                            leading: CircleAvatar(
-                              radius: 23,
-                              backgroundColor: Colors.grey,
-                              //display artist profile picture
-                              backgroundImage: NetworkImage(
-                                entry.value
-                              )
-                            ),
-                            //display artist name
-                            title: Text(artistName, style: TextStyle(fontWeight: FontWeight.bold)), 
-                            trailing: Icon(
-                              Icons.favorite_sharp,
-                              color: Colors.red.shade700,
+                          return InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                CupertinoPageRoute(builder: (context) => ArtistProfilePage(artistUUID: artistUUID)),
+                              );
+                            },
+                            child: ListTile(
+                              minVerticalPadding: 15,
+                              leading: CircleAvatar(
+                                radius: 23,
+                                backgroundColor: Colors.grey,
+                                //display artist profile picture
+                                backgroundImage: NetworkImage(
+                                  artistProfilePicture
+                                )
+                              ),
+                              //display artist name
+                              title: Text(
+                                artistName, 
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold, 
+                                  fontSize: 17
+                                )
+                              ),
                             ),
                           );
                         }).toList()
@@ -82,14 +101,12 @@ class _LikesPageState extends State<LikesPage> {
                 }
               }
             }
-          return Center(
-            child: CircularProgressIndicator(),
-          );
+            return Center(
+              child: CircularProgressIndicator(),
+            );
           },
           future: likesPageMap(CURRENT_USER.likedArtists), 
-        )
-
-        
+        )  
     );
   }
 }

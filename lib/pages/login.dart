@@ -25,8 +25,6 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final FirebaseAuthService _auth = FirebaseAuthService();
-  late YourClass _yourClass;
-
 
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
@@ -135,84 +133,42 @@ class _LoginPageState extends State<LoginPage> {
   void _signIn() async {
     String email = _emailController.text;
     String password = _passwordController.text;
-
-
-    User? user = await _auth.signInWithEmailAndPassword(email, password);
-    String userID = (FirebaseAuth.instance.currentUser?.uid)!;
-
+    User? user;
+    try{
+      user = await _auth.signInWithEmailAndPassword(email, password);
+    } catch(e) {
+      // print(e);
+      if (e is FirebaseAuthException){
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Login Failed", textAlign: TextAlign.center,),
+              content: Text(
+                "The login was unsuccessful. Please check your credentials and try again.",
+                textAlign: TextAlign.center,
+                ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("OK"),
+                ),
+              ],
+            );
+          },
+        );
+      } else {
+        print('An unexpected error has occurred: $e');
+      }
+      return;
+    }
 
     if (user != null) {
+      String userID = (FirebaseAuth.instance.currentUser?.uid)!;
       getUserDataFromFirestore(userID);
       Navigator.pushNamed(context, "/home");
-    } else { //login error button
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("Login Failed", textAlign: TextAlign.center,),
-            content: Text(
-              "The login was unsuccessful. Please check your credentials and try again.",
-              textAlign: TextAlign.center,
-              ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text("OK"),
-              ),
-            ],
-          );
-        },
-      );
-    }
+    } 
   }
 }
-
-Future main() async {
-  await dotenv.load(fileName: "assets/.env");
-}
-
-class YourClass {
-  late final spotify_api.SpotifyApiCredentials credentials;
-  late final spotify_api.SpotifyApi spotify;
-
-  YourClass() {
-
-    String clientID = dotenv.env['CLIENT_ID']!;
-    String clientSecret = dotenv.env['CLIENT_SECRET']!;
-
-    credentials = spotify_api.SpotifyApiCredentials(clientID, clientSecret);
-    spotify = spotify_api.SpotifyApi(credentials);
-  }
-
-Future<void> fetchArtist() async {
-  try {
-    final spotify = spotify_api.SpotifyApi(credentials); // Initialize your SpotifyApi object
-
-    final artistId = '7Mtf0UrDmV5JUU5uAziNRA';
-    final artist = await spotify.artists.get(artistId);
-
-    // print('FETCHING ARTIST (DEBUG):');
-    // print('Name: ${artist.name}');
-    // print('Genres: ${artist.genres}');
-    // print('Images: ${artist.images!.first.url}');
-
-    // Specify the market for top tracks (in this example, 'US' for United States)
-    final market = spotify_api.Market.US;
-
-    // Fetch top tracks of the artist
-    var topTracks = await spotify.artists.topTracks(artistId, market);
-    var secondTopTracks = topTracks.toList();
-    print('topTracks: $topTracks');
-    print('topTracks runtime: $topTracks.runtimeType');
-    var lol = secondTopTracks.first.previewUrl;
-    print('$lol');
-    print(secondTopTracks.runtimeType);
-  } catch (e) {
-    print('Error fetching artist: $e');
-  }
-}
-
-}
-

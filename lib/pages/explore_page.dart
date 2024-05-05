@@ -13,6 +13,7 @@ import 'dart:math';
 import 'package:songbird/pages/likes_page.dart';
 import 'package:songbird/pages/profile_page.dart';
 import 'package:songbird/pages/settings.dart';
+import 'package:flutter/cupertino.dart';
 
 class ExplorePage extends StatefulWidget
 {
@@ -29,6 +30,7 @@ class _ExplorePageState extends State<ExplorePage> {
   final style = TextStyle(fontSize: 60, fontWeight: FontWeight.bold);
   final description = TextStyle(fontSize: 16, color: Colors.white);
   int currentIndex = 1;
+  var idList;
 
   final pages = [
     LikesPage(),
@@ -36,7 +38,10 @@ class _ExplorePageState extends State<ExplorePage> {
     ProfilePage()
   ];
 
-
+  // @override
+  // void initState(){
+  //   super.initState();
+  // }
 
 
   @override
@@ -64,7 +69,7 @@ class _ExplorePageState extends State<ExplorePage> {
         Map<String, String> snippets_Map = Map.from(artistData["snippets"]);
         var snippetList = snippets_Map.entries.toList();
 
-        var idList = getArtistIDs();
+        idList = getArtistIDs();
         final random = Random();
 
         return Stack(
@@ -186,7 +191,7 @@ class _ExplorePageState extends State<ExplorePage> {
                 ElevatedButton(
                   onPressed: () {
                     // Handle DISLIKE button press
-                    String next = idList[random.nextInt(idList.length)];
+                    String next = idList[(random.nextInt(idList.length)) % 17];
                     CURRENT_USER.handleDislike(widget.artistUUID);
                     Navigator.push(
                       context,
@@ -208,7 +213,7 @@ class _ExplorePageState extends State<ExplorePage> {
                 ElevatedButton(
                   onPressed: () {
                     // Handle LIKE button press
-                    String next = idList[random.nextInt(idList.length)];
+                    String next = idList[(random.nextInt(idList.length)) % 17];
                     CURRENT_USER.handleLike(widget.artistUUID);
                     Navigator.push(
                       context,
