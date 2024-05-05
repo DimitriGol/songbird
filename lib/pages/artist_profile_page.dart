@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:songbird/database_management/database_funcs.dart';
 import 'package:songbird/main.dart';
@@ -43,6 +45,25 @@ class _ArtistProfilePageState extends State<ArtistProfilePage> {
 
                 return Stack(
                   children: [
+                      
+                        GestureDetector(
+                          behavior: HitTestBehavior.translucent,
+                          onTap:() {
+                            print("PREESSSSSSSSSSSSSSSSSSSSSS");
+                            Navigator.pop(
+                                            context);
+                                           
+                          },
+                          child: 
+                          Container(
+                            //decoration: BoxDecoration(border: Border.all()),
+                           // alignment: Alignment.center,
+                            child: Icon(
+                              Icons.arrow_back_ios_new_rounded,
+                            ),
+                          ),
+                        ),  
+  
                     Center(
                       child: SingleChildScrollView(
                         child: Container(
@@ -139,7 +160,8 @@ class _ArtistProfilePageState extends State<ArtistProfilePage> {
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.red.shade700
                                   ),
-                                )
+                                ),
+                                
                               ]
                           ),
                         )

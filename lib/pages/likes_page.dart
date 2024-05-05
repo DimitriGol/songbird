@@ -3,6 +3,7 @@ import 'package:songbird/database_management/database_funcs.dart';
 import 'package:songbird/main.dart';
 import 'package:songbird/classes/users.dart';
 import 'package:songbird/pages/artist_profile_page.dart';
+import 'package:flutter/cupertino.dart';
 
 
 class LikesPage extends StatefulWidget
@@ -70,7 +71,7 @@ class _LikesPageState extends State<LikesPage> {
                             onTap: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => ArtistProfilePage(artistUUID: artistUUID)),
+                                CupertinoPageRoute(builder: (context) => ArtistProfilePage(artistUUID: artistUUID)),
                               );
                             },
                             child: ListTile(
