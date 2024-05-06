@@ -130,9 +130,10 @@ class _ExplorePageState extends State<ExplorePage> {
                     child: ListTile(
                       shape:StadiumBorder(),
                       tileColor: Color.fromARGB(255, 124, 77, 235),
-                      title: Text(artistData["description"],
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.chakraPetch(textStyle: description),),
+                      title: Text("About Me", style: GoogleFonts.chakraPetch(textStyle: TextStyle(fontSize: 18,fontWeight: FontWeight.bold, color: Colors.white)),),
+                      subtitle: Text(artistData["description"],
+                      //textAlign: TextAlign.center,
+                      style: GoogleFonts.chakraPetch(textStyle: description, fontStyle: FontStyle.italic),),
                       )
                       
                       ),
