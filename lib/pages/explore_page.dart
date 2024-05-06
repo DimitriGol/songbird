@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:songbird/classes/users.dart';
@@ -76,7 +78,7 @@ class _ExplorePageState extends State<ExplorePage> {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('lib/images/pixel_space.gif'),
+                image: AssetImage('lib/images/sunset.png'),
                 fit: BoxFit.cover,
               ),
             ),
@@ -90,27 +92,49 @@ class _ExplorePageState extends State<ExplorePage> {
                   children: [
                     FittedBox(
                       fit: BoxFit.fitWidth,
-                      child: Text(
-                        artistData['username'],
-                        style: GoogleFonts.honk(
-                          textStyle: style,
+                      child: Stack(
+                        children: [
+                          Text(
+                          artistData['username'],
+                          style: GoogleFonts.graduate(
+                            textStyle: TextStyle(
+                              fontSize: 60, fontWeight: FontWeight.bold,),
+                        
+                            shadows:<Shadow>[
+                                Shadow(
+                                  blurRadius: 50.0,
+                                  color: Color.fromARGB(255, 0, 195, 255),
+                                ),
+                              ], 
+
+                            color: Color.fromARGB(255, 255, 255, 255)
+                            
+                            
+                          ),
                         ),
-                      ),
+                  ]),
                     ),
                     SizedBox(height: 8),
-                    Image.network(
-                      artistData["profile_pic"],
-                      width: 200,
-                      height: 200,
-                    ),
+                    CircleAvatar(
+                                radius: 100,
+                                backgroundColor: Colors.grey,
+                                //display artist profile picture
+                                backgroundImage: NetworkImage(
+                                  artistData["profile_pic"]
+                                )
+                              ),
                     SizedBox(height: 8),
-                    Text(
-                      artistData['description'],
+                    Card(
+                       shape:StadiumBorder(),
+                    child: ListTile(
+                      shape:StadiumBorder(),
+                      tileColor: Color.fromARGB(255, 124, 77, 235),
+                      title: Text(artistData["description"],
                       textAlign: TextAlign.center,
-                      style: GoogleFonts.chakraPetch(
-                        textStyle: description,
+                      style: GoogleFonts.chakraPetch(textStyle: description),),
+                      )
+                      
                       ),
-                    ),
              
                     SizedBox(height: 8),
                    
