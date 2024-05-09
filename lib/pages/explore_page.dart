@@ -32,7 +32,7 @@ class _ExplorePageState extends State<ExplorePage> {
   final style = TextStyle(fontSize: 60, fontWeight: FontWeight.bold);
   final description = TextStyle(fontSize: 16, color: Colors.white);
   int currentIndex = 1;
-  var idList;
+  List<String> idList = [];
 
   final pages = [
     LikesPage(),
@@ -73,6 +73,25 @@ class _ExplorePageState extends State<ExplorePage> {
 
         idList = getArtistIDs();
         final random = Random();
+
+        if(CURRENT_USER.likedArtists[widget.artistUUID] == true){
+          if(idList.isEmpty){
+            return(
+              Center(
+                child:
+                Text(
+                  "No more artists left to see! D:"
+                  )
+                )
+              );
+          }else{
+            String next = idList[(random.nextInt(idList.length)) % 17];
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ExplorePage(artistUUID: next, onStartUp: true)),
+              );
+          }
+        }
 
         return Stack(
         children: [
@@ -216,12 +235,24 @@ class _ExplorePageState extends State<ExplorePage> {
                 ElevatedButton(
                   onPressed: () {
                     // Handle DISLIKE button press
-                    String next = idList[(random.nextInt(idList.length)) % 17];
-                    CURRENT_USER.handleDislike(widget.artistUUID);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) =>ExplorePage(artistUUID: next, onStartUp: true)),
-                    );
+                    if(idList.isNotEmpty){
+                      String next = idList[(random.nextInt(idList.length)) % 17];
+                      CURRENT_USER.handleDislike(widget.artistUUID);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ExplorePage(artistUUID: next, onStartUp: true)),
+                      );
+                    }else{
+                      CURRENT_USER.handleDislike(widget.artistUUID);
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            content: Text('No more artists to see! D:'),
+                            );
+                          }
+                      );
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     shape: CircleBorder(),
@@ -238,13 +269,24 @@ class _ExplorePageState extends State<ExplorePage> {
                 ElevatedButton(
                   onPressed: () {
                     // Handle LIKE button press
-                    String next = idList[(random.nextInt(idList.length)) % 17];
-                    CURRENT_USER.handleLike(widget.artistUUID);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) =>ExplorePage(artistUUID: next, onStartUp: true)),
-                    );
-                    
+                    if(idList.isNotEmpty){
+                      String next = idList[(random.nextInt(idList.length)) % 17];
+                      CURRENT_USER.handleLike(widget.artistUUID);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ExplorePage(artistUUID: next, onStartUp: true)),
+                      );
+                    }else{
+                      CURRENT_USER.handleLike(widget.artistUUID);
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            content: Text('No more artists to see! D:'),
+                            );
+                          }
+                      );
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     shape: CircleBorder(),
