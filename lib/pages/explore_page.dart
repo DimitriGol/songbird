@@ -40,11 +40,15 @@ class _ExplorePageState extends State<ExplorePage> {
     ProfilePage()
   ];
 
-  // @override
-  // void initState(){
-  //   super.initState();
-  // }
-
+  @override
+  void initState(){
+    super.initState();
+    idList = getArtistIDs();
+    Future.delayed( //NEED THIS DELAY TO ENSURE CURRENT_USER IS INITIALIZED BEFORE PAGE IS BUILT
+      Duration(seconds: 3),
+      () {},
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +75,7 @@ class _ExplorePageState extends State<ExplorePage> {
         Map<String, String> snippets_Map = Map.from(artistData["snippets"]);
         var snippetList = snippets_Map.entries.toList();
 
-        idList = getArtistIDs();
+        //idList = getArtistIDs();
         final random = Random();
 
         if(CURRENT_USER.likedArtists[widget.artistUUID] == true){
