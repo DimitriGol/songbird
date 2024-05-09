@@ -50,20 +50,20 @@ class _ArtistProfilePageState extends State<ArtistProfilePage> {
                 return Stack(
                   children: [
                       
-                        GestureDetector(
-                          behavior: HitTestBehavior.translucent,
-                          onTap:() {
-                            Navigator.pop(
-                                            context);
+                        // GestureDetector(
+                        //   behavior: HitTestBehavior.translucent,
+                        //   onTap:() {
+                        //     Navigator.pop(
+                        //                     context);
                                            
-                          },
-                          child: 
-                          Container(
-                            child: Icon(
-                              Icons.arrow_back_ios_new_rounded,
-                            ),
-                          ),
-                        ),  
+                        //   },
+                        //   child: 
+                        //   Container(
+                        //     child: Icon(
+                        //       Icons.arrow_back_ios_new_rounded,
+                        //     ),
+                        //   ),
+                        // ),  
   
                     Center(
                       child: SingleChildScrollView(
@@ -134,7 +134,11 @@ class _ArtistProfilePageState extends State<ArtistProfilePage> {
                                                 width: MediaQuery.of(context).size.width,
                                                 margin: EdgeInsets.symmetric(horizontal: 5.0),
                                                 decoration: BoxDecoration(
-                                                  color: Color.fromARGB(255, 255, 223, 83)
+                                                  image: DecorationImage(
+                                                    image: AssetImage('lib/images/sunset.png'),
+                                                    fit: BoxFit.cover,
+                                                    ),
+                                                  // color: Color.fromARGB(255, 255, 223, 83)
                                                 ),
                                                 child: Center(
                                                   child: Text(
@@ -142,6 +146,13 @@ class _ArtistProfilePageState extends State<ArtistProfilePage> {
                                                     style: TextStyle(
                                                       fontSize: 16.0,
                                                       fontWeight: FontWeight.bold,
+                                                      color: Colors.white,
+                                                      shadows:<Shadow>[
+                                                        Shadow(
+                                                          blurRadius: 50.0,
+                                                          color: Color.fromARGB(255, 0, 195, 255),
+                                                        ),
+                                                      ], 
                                                     ),
                                                   ),
                                                 ),
