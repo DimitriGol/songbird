@@ -79,7 +79,6 @@ flutter:
   assets:
      - assets/.env
      - lib/images/
-     - lib/images/pixel_space.gif
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

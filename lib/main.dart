@@ -94,7 +94,9 @@ Widget build(BuildContext context){
           child:  Center(child: Image.asset('lib/images/songbird_black_logo_and_text.png'))),
 
         trailing: CupertinoButton(
-          child: Icon(Icons.settings),
+          minSize: 20,
+          padding: EdgeInsets.all(0),
+          child: Icon(Icons.settings, size: 30,),
           onPressed: () {
             Navigator.push(
               context,

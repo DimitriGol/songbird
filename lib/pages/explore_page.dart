@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:songbird/classes/users.dart';
@@ -30,7 +32,7 @@ class _ExplorePageState extends State<ExplorePage> {
   final style = TextStyle(fontSize: 60, fontWeight: FontWeight.bold);
   final description = TextStyle(fontSize: 16, color: Colors.white);
   int currentIndex = 1;
-  var idList;
+  List<String> idList = [];
 
   final pages = [
     LikesPage(),
@@ -38,11 +40,15 @@ class _ExplorePageState extends State<ExplorePage> {
     ProfilePage()
   ];
 
-  // @override
-  // void initState(){
-  //   super.initState();
-  // }
-
+  @override
+  void initState(){
+    super.initState();
+    idList = getArtistIDs();
+    Future.delayed( //NEED THIS DELAY TO ENSURE CURRENT_USER IS INITIALIZED BEFORE PAGE IS BUILT
+      Duration(seconds: 3),
+      () {},
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,15 +75,34 @@ class _ExplorePageState extends State<ExplorePage> {
         Map<String, String> snippets_Map = Map.from(artistData["snippets"]);
         var snippetList = snippets_Map.entries.toList();
 
-        idList = getArtistIDs();
+        //idList = getArtistIDs();
         final random = Random();
+
+        if(CURRENT_USER.likedArtists[widget.artistUUID] == true){
+          if(idList.isEmpty){
+            return(
+              Center(
+                child:
+                Text(
+                  "No more artists left to see! D:"
+                  )
+                )
+              );
+          }else{
+            String next = idList[(random.nextInt(idList.length)) % 17];
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ExplorePage(artistUUID: next, onStartUp: true)),
+              );
+          }
+        }
 
         return Stack(
         children: [
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('lib/images/pixel_space.gif'),
+                image: AssetImage('lib/images/sunset.png'),
                 fit: BoxFit.cover,
               ),
             ),
@@ -91,27 +116,50 @@ class _ExplorePageState extends State<ExplorePage> {
                   children: [
                     FittedBox(
                       fit: BoxFit.fitWidth,
-                      child: Text(
-                        artistData['username'],
-                        style: GoogleFonts.honk(
-                          textStyle: style,
+                      child: Stack(
+                        children: [
+                          Text(
+                          artistData['username'],
+                          style: GoogleFonts.graduate(
+                            textStyle: TextStyle(
+                              fontSize: 60, fontWeight: FontWeight.bold,),
+                        
+                            shadows:<Shadow>[
+                                Shadow(
+                                  blurRadius: 50.0,
+                                  color: Color.fromARGB(255, 0, 195, 255),
+                                ),
+                              ], 
+
+                            color: Color.fromARGB(255, 255, 255, 255)
+                            
+                            
+                          ),
                         ),
-                      ),
+                  ]),
                     ),
                     SizedBox(height: 8),
-                    Image.network(
-                      artistData["profile_pic"],
-                      width: 200,
-                      height: 200,
-                    ),
+                    CircleAvatar(
+                                radius: 100,
+                                backgroundColor: Colors.grey,
+                                //display artist profile picture
+                                backgroundImage: NetworkImage(
+                                  artistData["profile_pic"]
+                                )
+                              ),
                     SizedBox(height: 8),
-                    Text(
-                      artistData['description'],
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.chakraPetch(
-                        textStyle: description,
+                    Card(
+                       shape:StadiumBorder(),
+                    child: ListTile(
+                      shape:StadiumBorder(),
+                      tileColor: Color.fromARGB(255, 124, 77, 235),
+                      title: Text("About Me", style: GoogleFonts.chakraPetch(textStyle: TextStyle(fontSize: 18,fontWeight: FontWeight.bold, color: Colors.white)),),
+                      subtitle: Text(artistData["description"],
+                      //textAlign: TextAlign.center,
+                      style: GoogleFonts.chakraPetch(textStyle: description, fontStyle: FontStyle.italic),),
+                      )
+                      
                       ),
-                    ),
              
                     SizedBox(height: 8),
                    
@@ -191,12 +239,24 @@ class _ExplorePageState extends State<ExplorePage> {
                 ElevatedButton(
                   onPressed: () {
                     // Handle DISLIKE button press
-                    String next = idList[(random.nextInt(idList.length)) % 17];
-                    CURRENT_USER.handleDislike(widget.artistUUID);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) =>ExplorePage(artistUUID: next, onStartUp: true)),
-                    );
+                    if(idList.isNotEmpty){
+                      String next = idList[(random.nextInt(idList.length)) % 17];
+                      CURRENT_USER.handleDislike(widget.artistUUID);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ExplorePage(artistUUID: next, onStartUp: true)),
+                      );
+                    }else{
+                      CURRENT_USER.handleDislike(widget.artistUUID);
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            content: Text('No more artists to see! D:'),
+                            );
+                          }
+                      );
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     shape: CircleBorder(),
@@ -213,13 +273,24 @@ class _ExplorePageState extends State<ExplorePage> {
                 ElevatedButton(
                   onPressed: () {
                     // Handle LIKE button press
-                    String next = idList[(random.nextInt(idList.length)) % 17];
-                    CURRENT_USER.handleLike(widget.artistUUID);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) =>ExplorePage(artistUUID: next, onStartUp: true)),
-                    );
-                    
+                    if(idList.isNotEmpty){
+                      String next = idList[(random.nextInt(idList.length)) % 17];
+                      CURRENT_USER.handleLike(widget.artistUUID);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ExplorePage(artistUUID: next, onStartUp: true)),
+                      );
+                    }else{
+                      CURRENT_USER.handleLike(widget.artistUUID);
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            content: Text('No more artists to see! D:'),
+                            );
+                          }
+                      );
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     shape: CircleBorder(),
