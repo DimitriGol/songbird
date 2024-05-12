@@ -13,7 +13,6 @@ void uploadUserToFirestore(String userType, String uuid, String username, String
     profilePicture = SpotifyHelp.imageUrl;
     try {
       if(userType == 'Artist'){
-        //UPDATE ARTIST CLASS TO HAVE A DATA MEMBER FOR THE TRACKS TO BE STORED
         CURRENT_USER = Artist(uuid: uuid, username: username, profilePicture: profilePicture, likedArtists: likedArtists, tasteTracker: tasteTracker, spotifyLink: spotifyLink, appleMusicLink: appleMusicLink, youtubeLink: youtubeLink, description: description, snippets: SpotifyHelp.trackMaps);
         DocumentReference userDocRef = firestore.collection("artists").doc(uuid);
         await userDocRef.set({
@@ -26,6 +25,7 @@ void uploadUserToFirestore(String userType, String uuid, String username, String
         'description' : CURRENT_USER.description,
         'youtube_link' : CURRENT_USER.youtubeLink,
         'snippets' : CURRENT_USER.snippets,
+        'likes_counter' : 0
         });
       }else if(userType == 'Listener'){
         CURRENT_USER = BaseListener(uuid: uuid, username: username, profilePicture: profilePicture, likedArtists: likedArtists, tasteTracker: tasteTracker);
@@ -149,4 +149,29 @@ Future<Map<String, Map<String, String>>> likesPageMap(LinkedHashMap<String, bool
     }
 
   return result;
+}
+
+void incrementLikeCounter(String artistUUID) async {
+  final firestore = FirebaseFirestore.instance;
+  var artist = firestore.collection("artists").doc(artistUUID);
+  artist.update({
+    "likes_counter" : FieldValue.increment(1)
+  });
+}
+
+void decrementLikeCounter(String artistUUID) async {
+  final firestore = FirebaseFirestore.instance;
+  var artist = firestore.collection("artists").doc(artistUUID);
+  await artist.get().then((DocumentSnapshot doc) {
+    final data = doc.data() as Map;
+    if(!data.containsKey("likes_counter")){
+      artist.update({
+      "likes_counter" : FieldValue.increment(0)
+      });
+    }else if(data["likes_counter"] > 0){
+      artist.update({
+      "likes_counter" : FieldValue.increment(-1)
+      });
+    }
+  });
 }

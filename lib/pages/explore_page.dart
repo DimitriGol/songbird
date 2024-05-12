@@ -283,6 +283,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   onPressed: () {
                     // Handle LIKE button press
                     if(idList.isNotEmpty){
+                      incrementLikeCounter(widget.artistUUID);
                       String next = idList[(random.nextInt(idList.length)) % 17];
                       CURRENT_USER.handleLike(widget.artistUUID);
                       Navigator.push(
@@ -290,6 +291,7 @@ class _ExplorePageState extends State<ExplorePage> {
                         MaterialPageRoute(builder: (context) => ExplorePage(artistUUID: next, onStartUp: true)),
                       );
                     }else{
+                      incrementLikeCounter(widget.artistUUID);
                       CURRENT_USER.handleLike(widget.artistUUID);
                       showDialog(
                         context: context,
