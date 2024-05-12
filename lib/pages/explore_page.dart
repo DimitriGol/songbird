@@ -77,7 +77,6 @@ class _ExplorePageState extends State<ExplorePage> {
         Map<String, String> snippets_Map = Map.from(artistData["snippets"]);
         var snippetList = snippets_Map.entries.toList();
 
-        //idList = getArtistIDs();
         final random = Random();
 
         if(CURRENT_USER.likedArtists[widget.artistUUID] == true){
@@ -93,7 +92,7 @@ class _ExplorePageState extends State<ExplorePage> {
                     );
                 }else{
                   Future.delayed( //NEED THIS DELAY TO ENSURE WIDGET IS BUILT BEFORE NAVIGATING
-                    Duration(milliseconds: 800),
+                    Duration(milliseconds: 500),
                     () {
                       
                   String next = idList[(random.nextInt(idList.length)) % 17];
@@ -101,6 +100,7 @@ class _ExplorePageState extends State<ExplorePage> {
                     context,
                     MaterialPageRoute(builder: (context) => ExplorePage(artistUUID: next, onStartUp: true)),
                     );
+                  //Navigator.of(context).push(PageRouteBuilder(opaque: false, pageBuilder: (BuildContext context, _, __) => ExplorePage(artistUUID: next, onStartUp:  true)));
                     },
                   );
                 }
