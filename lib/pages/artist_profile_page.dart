@@ -23,7 +23,8 @@ class _ArtistProfilePageState extends State<ArtistProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(), //makes back button appear
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(backgroundColor: Colors.blue.withOpacity(0),), //makes back button appear
       body: 
         FutureBuilder(
           builder: (context, snapshot) {
@@ -43,27 +44,12 @@ class _ArtistProfilePageState extends State<ArtistProfilePage> {
                 final artistData = snapshot.data as Map<String, dynamic>;
                 Map<String, String> snippets_Map = Map.from(artistData["snippets"]);
                 var snippetList = snippets_Map.entries.toList(); 
-                var currentIndex = 0;
+                //var currentIndex = 0;
                 CarouselController controller = CarouselController();
 
 
                 return Stack(
                   children: [
-                      
-                        // GestureDetector(
-                        //   behavior: HitTestBehavior.translucent,
-                        //   onTap:() {
-                        //     Navigator.pop(
-                        //                     context);
-                                           
-                        //   },
-                        //   child: 
-                        //   Container(
-                        //     child: Icon(
-                        //       Icons.arrow_back_ios_new_rounded,
-                        //     ),
-                        //   ),
-                        // ),  
   
                     Center(
                       child: SingleChildScrollView(
@@ -141,20 +127,27 @@ class _ArtistProfilePageState extends State<ArtistProfilePage> {
                                                   // color: Color.fromARGB(255, 255, 223, 83)
                                                 ),
                                                 child: Center(
-                                                  child: Text(
-                                                    snippet.key, 
-                                                    style: TextStyle(
-                                                      fontSize: 16.0,
-                                                      fontWeight: FontWeight.bold,
-                                                      color: Colors.white,
-                                                      shadows:<Shadow>[
-                                                        Shadow(
-                                                          blurRadius: 50.0,
-                                                          color: Color.fromARGB(255, 0, 195, 255),
+                                                  child: Stack(
+                                                    children: [
+                                                     Text(
+                                                        snippet.key,
+                                                        style: TextStyle(
+                                                          fontSize: 15,
+                                                          foreground: Paint()
+                                                            ..style = PaintingStyle.stroke
+                                                            ..strokeWidth = 2
+                                                            ..color = Color.fromARGB(255, 0, 0, 0),
                                                         ),
-                                                      ], 
-                                                    ),
-                                                  ),
+                                                      ),
+                                                      // Solid text as fill.
+                                                      Text(
+                                                        snippet.key,
+                                                        style: TextStyle(
+                                                          fontSize: 15,
+                                                          color: Color.fromARGB(255, 255, 255, 255),
+                                                        ),
+                                                      ),
+                                                                                    ]),
                                                 ),
                                               ),
                                               onTap: () {
