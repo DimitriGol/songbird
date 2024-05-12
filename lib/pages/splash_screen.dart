@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:songbird/pages/login.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+  const SplashScreen({super.key, required this.toExplorePage});
+  final bool toExplorePage;
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -25,10 +26,14 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
       Future.delayed(Duration(seconds: 2), () {
         // Trigger navigation to login page
         setState(() {
-          Navigator.pushReplacement(
+          if(widget.toExplorePage){
+            Navigator.pushNamed(context, "/home");
+          }else{
+           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => LoginPage()),
-          );
+          ); 
+          }
         });
       });
     });

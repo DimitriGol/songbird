@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       routes:{
-        '/':(context) => SplashScreen(),
+        '/':(context) => SplashScreen(toExplorePage: false),
         '/settings':(context) => SettingsPage(),
         '/home' : (context) => MyHomePage(title: 'Songbird'),
         '/signup' :(context) => SignUpPage(),
