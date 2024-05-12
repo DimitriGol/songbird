@@ -32,7 +32,6 @@ class _ExplorePageState extends State<ExplorePage> {
   final style = TextStyle(fontSize: 60, fontWeight: FontWeight.bold);
   final description = TextStyle(fontSize: 16, color: Colors.white);
   int currentIndex = 1;
-  List<String> idList = [];
 
   final pages = [
     LikesPage(),
@@ -44,10 +43,12 @@ class _ExplorePageState extends State<ExplorePage> {
   // void initState(){
   //   super.initState();
   //   idList = getArtistIDs();
-  //   // Future.delayed( //NEED THIS DELAY TO ENSURE CURRENT_USER IS INITIALIZED BEFORE PAGE IS BUILT
-  //   //   Duration(seconds: 3),
-  //   //   () {},
-  //   // );
+  //   Future.delayed( //NEED THIS DELAY TO ENSURE CURRENT_USER IS INITIALIZED BEFORE PAGE IS BUILT
+  //     Duration(seconds: 3),
+  //     () {
+
+  //     },
+  //   );
   // }
 
   @override
@@ -70,32 +71,40 @@ class _ExplorePageState extends State<ExplorePage> {
         // if we got our data
       } else if (snapshot.hasData) {
         // Extracting data from snapshot object
-        final artistData = snapshot.data as Map<String, dynamic>;
+        final artistData = snapshot.data![0] as Map<String, dynamic>;
+        final idList = snapshot.data![1] as List<String>;
 
         Map<String, String> snippets_Map = Map.from(artistData["snippets"]);
         var snippetList = snippets_Map.entries.toList();
 
-        idList = getArtistIDs();
         final random = Random();
 
         if(CURRENT_USER.likedArtists[widget.artistUUID] == true){
-          if(idList.isEmpty){
-            return(
-              Center(
-                child:
-                Text(
-                  "No more artists left to see! D:"
-                  )
-                )
-              );
-          }else{
-            String next = idList[(random.nextInt(idList.length)) % 17];
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ExplorePage(artistUUID: next, onStartUp: true)),
-              );
-          }
-        }
+              print(idList);
+              if(idList.isEmpty){
+                  return(
+                    Center(
+                      child:
+                      Text(
+                        "No more artists left to see! D:"
+                        )
+                      )
+                    );
+                }else{
+                  Future.delayed( //NEED THIS DELAY TO ENSURE WIDGET IS BUILT BEFORE NAVIGATING
+                    Duration(milliseconds: 500),
+                    () {
+                      
+                  String next = idList[(random.nextInt(idList.length)) % 17];
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ExplorePage(artistUUID: next, onStartUp: true)),
+                    );
+                  //Navigator.of(context).push(PageRouteBuilder(opaque: false, pageBuilder: (BuildContext context, _, __) => ExplorePage(artistUUID: next, onStartUp:  true)));
+                    },
+                  );
+                }
+        }else{
 
         return Stack(
         children: [
@@ -308,7 +317,7 @@ class _ExplorePageState extends State<ExplorePage> {
           ),
         ],
       );
-
+        }
 
     
       }
@@ -322,7 +331,7 @@ class _ExplorePageState extends State<ExplorePage> {
   },
     
 
-     future: explorePageMap(widget.artistUUID), 
+     future: Future.wait([explorePageMap(widget.artistUUID), getArtistIDs()]), 
   )
 
     );
