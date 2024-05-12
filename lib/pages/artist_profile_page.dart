@@ -168,6 +168,8 @@ class _ArtistProfilePageState extends State<ArtistProfilePage> {
                                     // Removes artist from likedArtist map
                                     CURRENT_USER.handleDislike(widget.artistUUID);
 
+                                    decrementLikeCounter(widget.artistUUID);
+
                                     //Redirects user to likes page
                                     Navigator.push(
                                       context,
