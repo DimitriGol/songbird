@@ -70,11 +70,9 @@ class _ExplorePageState extends State<ExplorePage> {
          
         // if we got our data
       } else if (snapshot.hasData) {
-        print(snapshot.data);
         // Extracting data from snapshot object
         final artistData = snapshot.data![0] as Map<String, dynamic>;
         final idList = snapshot.data![1] as List<String>;
-        print(idList);
 
         Map<String, String> snippets_Map = Map.from(artistData["snippets"]);
         var snippetList = snippets_Map.entries.toList();
@@ -94,9 +92,10 @@ class _ExplorePageState extends State<ExplorePage> {
                       )
                     );
                 }else{
-                  Future.delayed( //NEED THIS DELAY TO ENSURE CURRENT_USER IS INITIALIZED BEFORE PAGE IS BUILT
-                    Duration(seconds: 1),
+                  Future.delayed( //NEED THIS DELAY TO ENSURE WIDGET IS BUILT BEFORE NAVIGATING
+                    Duration(milliseconds: 800),
                     () {
+                      
                   String next = idList[(random.nextInt(idList.length)) % 17];
                   Navigator.push(
                     context,

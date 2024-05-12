@@ -109,7 +109,7 @@ Future<List<String>> getArtistIDs () async
 {
   final firestore = FirebaseFirestore.instance;
   List<String> artistList = [];
-  firestore.collection("artists").get().then((value) => {
+  await firestore.collection("artists").get().then((value) => {
     for(var docSnapshot in value.docs){
       if(CURRENT_USER.likedArtists.containsKey(docSnapshot.id) == false || CURRENT_USER.likedArtists[docSnapshot.id] == false){
         artistList.add(docSnapshot.id)
