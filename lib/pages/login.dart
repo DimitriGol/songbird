@@ -7,9 +7,58 @@ import 'package:spotify/spotify.dart' as spotify_api;
 import 'package:songbird/classes/spotifyHelper.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:convert';
+import 'package:webview_flutter/webview_flutter.dart';
 
 import '../firebase_auth/firebase_auth_class.dart';
 import 'signup.dart';
+
+import 'package:flutter/material.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+
+class SpotifyLoginWebView extends StatefulWidget {
+  final String authUrl;
+  final Function(Uri)? onAuthCompleted;
+
+  const SpotifyLoginWebView({
+    Key? key,
+    required this.authUrl,
+    this.onAuthCompleted,
+  }) : super(key: key);
+
+  @override
+  _SpotifyLoginWebViewState createState() => _SpotifyLoginWebViewState();
+}
+
+class _SpotifyLoginWebViewState extends State<SpotifyLoginWebView> {
+  late WebViewController _webViewController;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Spotify Login')),
+      body: WebView(
+        initialUrl: widget.authUrl,
+        javascriptMode: JavascriptMode.unrestricted,
+        onWebViewCreated: (WebViewController webViewController) {
+          _webViewController = webViewController;
+        },
+        navigationDelegate: (NavigationRequest request) {
+          // Listen for navigation events
+          if (request.url.startsWith('https://www.google.com')) {
+            // Capture the redirection URI
+            if (widget.onAuthCompleted != null) {
+              widget.onAuthCompleted!(Uri.parse(request.url));
+            }
+            // Prevent further navigation
+            return NavigationDecision.prevent;
+          }
+          return NavigationDecision.navigate;
+        },
+      ),
+    );
+  }
+}
+
 
 class LoginPage extends StatefulWidget {
   final Widget? child;
@@ -23,6 +72,7 @@ class _LoginPageState extends State<LoginPage> {
   final FirebaseAuthService _auth = FirebaseAuthService();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+  late final SpotifyHelper spotifyHelper;
 
   @override
   void initState() {
@@ -96,7 +146,7 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: _loginToSpotify,
-              child: Text('Login to Spotify (Testing and will freeze page)'),
+              child: Text('Login to Spotify (Testing (Warning): Pressing this will freeze the page!)'),
             ),
             SizedBox(height: 20),
             Row(
@@ -169,8 +219,36 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  void _loginToSpotify() async {
-    SpotifyHelper spotifyHelper = SpotifyHelper();
-    await spotifyHelper.authorize();
-  }
+  void _loginToSpotify() {
+
+    late final String redirectUri = "https://www.google.com";
+    late final String clientid = dotenv.env['CLIENT_ID']!;
+
+    String authUrl = 'https://accounts.spotify.com/authorize' +
+    '?response_type=token' +
+    '&client_id=$clientid' +
+    '&scope=user-read-email,user-library-read' +
+    '&redirect_uri=$redirectUri';
+
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => SpotifyLoginWebView(
+        authUrl: authUrl,
+        onAuthCompleted: (Uri redirectUri) {
+          // Handle the redirection URI
+          _handleAuthorizationResponse(redirectUri);
+        },
+      ),
+    ),
+  );
+}
+
+void _handleAuthorizationResponse(Uri redirectUri) async {
+  // Handle the redirection URI
+  print('Redirect URI(LOGIN DEBUG PRINT): $redirectUri');
+  // Call your method to process the URI
+  await spotifyHelper.handleAuthorizationResponse(redirectUri);
+}
+
 }

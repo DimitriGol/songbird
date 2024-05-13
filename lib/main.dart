@@ -11,8 +11,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:songbird/database_management/database_funcs.dart';
-import 'dart:math';
+import 'package:app_links/app_links.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:spotify/spotify.dart' as spotify_api;
+import 'package:songbird/classes/spotifyHelper.dart';
 
 dynamic CURRENT_USER; //global variable to be assigned a user class later on in program flow
  
@@ -29,8 +31,17 @@ void main() async{
             projectId: dotenv.env['FIREBASE_PROJECT_ID']!));
   //await Firebase.initializeApp();
 
+
+  final _appLinks = AppLinks(); // Instantiate AppLink early on. (Documentation for app_links package asked for this)
+
+  _appLinks.uriLinkStream.listen((uri){ // it's listening to uri. Don't know if it's the right URI. I might need to feed it the Chrome URI.
+  print('URI received(A): $uri'); // spits out the local URI. Change to chrome URI.
+  });
   runApp(const MyApp());
+
 }
+
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

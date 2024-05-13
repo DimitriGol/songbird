@@ -43,6 +43,7 @@ class SpotifyHelper
   late final String clientID;
   late final String redirectURI;
   late final spotify_api.SpotifyApi spotify;
+  Function(Uri responseUri)? handleAuthorizationCallback;
 
 
   Map<String, String> trackMaps = {};
@@ -69,11 +70,14 @@ class SpotifyHelper
 
   Future<void> handleAuthorizationResponse(Uri responseUri) async 
   {
+    print('URI received: $responseUri'); 
 
   if (responseUri.fragment != null) 
   {
     final queryParams = Uri.splitQueryString(responseUri.fragment!);
     final accessToken = queryParams['access_token'];
+
+    print('accessToken: $accessToken');
     
     if (accessToken != null) {
       // Use the access token to make authorized requests to the Spotify API
@@ -82,6 +86,11 @@ class SpotifyHelper
       // Example: Fetch user profile
       final userProfile = await authenticatedSpotify.me.get();
       print('User profile: $userProfile');
+
+
+      if (handleAuthorizationCallback != null) {
+          handleAuthorizationCallback!(responseUri);
+      }
       
       // Perform additional actions, such as fetching user data or navigating to a new screen.
     } else {
