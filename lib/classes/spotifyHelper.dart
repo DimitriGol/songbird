@@ -70,7 +70,7 @@ class SpotifyHelper
 
   Future<void> handleAuthorizationResponse(Uri responseUri) async 
   {
-    print('URI received: $responseUri'); 
+    print('URI received (spotifyHelper handleAuthorizationResponse): $responseUri'); 
 
   if (responseUri.fragment != null) 
   {

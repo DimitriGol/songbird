@@ -241,19 +241,16 @@ class _LoginPageState extends State<LoginPage> {
       builder: (context) => SpotifyLoginWebView(
         authUrl: authUrl,
         onAuthCompleted: (Uri redirectUri) {
-          // Handle the redirection URI
-          _handleAuthorizationResponse(redirectUri);
+          _handleAuthorizationResponse(redirectUri); // Handle the redirection URI
         },
       ),
     ),
   );
 }
 
-void _handleAuthorizationResponse(Uri redirectUri) async {
-  // Handle the redirection URI
+void _handleAuthorizationResponse(Uri redirectUri) async { // The function to handle the redirection URI
   print('Redirect URI(LOGIN DEBUG PRINT): $redirectUri');
-  // Call your method to process the URI
-  await spotifyHelper.handleAuthorizationResponse(redirectUri);
+  await spotifyHelper.handleAuthorizationResponse(redirectUri); // The method to process the URI
 }
 
 }
