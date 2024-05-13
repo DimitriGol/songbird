@@ -216,6 +216,7 @@ class _LoginPageState extends State<LoginPage> {
     if (user != null) {
       String userID = (FirebaseAuth.instance.currentUser?.uid)!;
       getUserDataFromFirestore(userID);
+      Navigator.pushNamed(context, "/home");
       Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => SplashScreen(toExplorePage: true)),
