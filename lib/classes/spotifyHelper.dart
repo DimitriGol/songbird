@@ -41,6 +41,7 @@ Future<String?> getDescription(String UUID) async {
 class SpotifyHelper 
 {
   late final String clientID;
+  late final String clientSecret;
   late final String redirectURI;
   late final spotify_api.SpotifyApi spotify;
   Function(Uri responseUri)? handleAuthorizationCallback;
@@ -54,6 +55,7 @@ class SpotifyHelper
     clientID = dotenv.env['CLIENT_ID']!;
     redirectURI = 'https://www.google.com';
     spotify = spotify_api.SpotifyApi(spotify_api.SpotifyApiCredentials(clientID, ''));
+    clientSecret = dotenv.env['CLIENT_SECRET']!;
   }
 
   Future<void> authorize() async 
@@ -81,11 +83,18 @@ class SpotifyHelper
     
     if (accessToken != null) {
       // Use the access token to make authorized requests to the Spotify API
-      final authenticatedSpotify = spotify_api.SpotifyApi(spotify_api.SpotifyApiCredentials(accessToken, ''));
+      var authenticatedSpotify = spotify_api.SpotifyApi(spotify_api.SpotifyApiCredentials(clientID, clientSecret ));
+      var holder = spotify_api.SpotifyApiCredentials.withAccessToken(accessToken);
 
       // Example: Fetch user profile
-      final userProfile = await authenticatedSpotify.me.get();
-      print('User profile: $userProfile');
+      try {
+
+        final userProfile = await authenticatedSpotify.me.get();
+        print('User profile: $userProfile');
+        
+      } catch (e) {
+        print(e);
+      }
 
 
       if (handleAuthorizationCallback != null) {
