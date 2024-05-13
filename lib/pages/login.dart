@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:songbird/database_management/database_funcs.dart';
+import 'package:songbird/pages/splash_screen.dart';
 import 'package:songbird/widgets/form_container_widget.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:spotify/spotify.dart' as spotify_api;
@@ -215,7 +216,10 @@ class _LoginPageState extends State<LoginPage> {
     if (user != null) {
       String userID = (FirebaseAuth.instance.currentUser?.uid)!;
       getUserDataFromFirestore(userID);
-      Navigator.pushNamed(context, "/home");
+      Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => SplashScreen(toExplorePage: true)),
+          );
     }
   }
 
