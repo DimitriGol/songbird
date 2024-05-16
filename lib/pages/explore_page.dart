@@ -80,7 +80,7 @@ class _ExplorePageState extends State<ExplorePage> {
         final random = Random();
 
         if(CURRENT_USER.likedArtists[widget.artistUUID] == true){
-              print(idList);
+              // print(idList);
               if(idList.isEmpty){
                   return(
                     Center(
