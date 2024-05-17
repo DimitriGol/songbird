@@ -101,6 +101,7 @@ class Artist extends BaseListener {
   String appleMusicLink;
   String youtubeLink;
   String description;
+  int likesCounter;
 
   Artist({
     required super.uuid,
@@ -114,5 +115,6 @@ class Artist extends BaseListener {
     required this.appleMusicLink, 
     required this.youtubeLink,
     required this.description,
+    required this.likesCounter,
   });
 } //Listener

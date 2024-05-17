@@ -4,7 +4,7 @@ import 'package:songbird/classes/users.dart';
 import 'package:songbird/main.dart';
 import 'dart:collection';
 
-void uploadUserToFirestore(String userType, String uuid, String username, String profilePicture, LinkedHashMap<String, bool> likedArtists, Map<String, int> tasteTracker, String description, String spotifyLink, String appleMusicLink, String youtubeLink) async{
+void uploadUserToFirestore(String userType, String uuid, String username, String profilePicture, LinkedHashMap<String, bool> likedArtists, Map<String, int> tasteTracker, String description, String spotifyLink, String appleMusicLink, String youtubeLink, int likesCounter) async{
     final firestore = FirebaseFirestore.instance;
 
     final SpotifyHelp = SpotifyHelper();
@@ -13,7 +13,7 @@ void uploadUserToFirestore(String userType, String uuid, String username, String
     profilePicture = SpotifyHelp.imageUrl;
     try {
       if(userType == 'Artist'){
-        CURRENT_USER = Artist(uuid: uuid, username: username, profilePicture: profilePicture, likedArtists: likedArtists, tasteTracker: tasteTracker, spotifyLink: spotifyLink, appleMusicLink: appleMusicLink, youtubeLink: youtubeLink, description: description, snippets: SpotifyHelp.trackMaps);
+        CURRENT_USER = Artist(uuid: uuid, username: username, profilePicture: profilePicture, likedArtists: likedArtists, tasteTracker: tasteTracker, spotifyLink: spotifyLink, appleMusicLink: appleMusicLink, youtubeLink: youtubeLink, description: description, snippets: SpotifyHelp.trackMaps, likesCounter: likesCounter);
         DocumentReference userDocRef = firestore.collection("artists").doc(uuid);
         await userDocRef.set({
         'liked_artists': CURRENT_USER.likedArtists,
@@ -77,8 +77,7 @@ void getUserDataFromFirestore(String uuid) async{
           LinkedHashMap<String, bool> artist_Map = LinkedHashMap.from(data["liked_artists"]);
           Map<String, String> snippets_Map = Map.from(data["snippets"]);
           Map<String, int> taste_Map = Map.from(data['taste_tracker']);
-
-          CURRENT_USER = Artist(uuid: uuid, username: data["username"], profilePicture: data["profile_pic"], likedArtists: artist_Map, tasteTracker: taste_Map, spotifyLink: data["spotify_link"], appleMusicLink: data["apple_music_link"], youtubeLink: data["youtube_link"], description: data["description"], snippets: snippets_Map);
+          CURRENT_USER = Artist(uuid: uuid, username: data["username"], profilePicture: data["profile_pic"], likedArtists: artist_Map, tasteTracker: taste_Map, spotifyLink: data["spotify_link"], appleMusicLink: data["apple_music_link"], youtubeLink: data["youtube_link"], description: data["description"], snippets: snippets_Map, likesCounter: data["likes_counter"]);
         }
     );
     }catch (e) {
