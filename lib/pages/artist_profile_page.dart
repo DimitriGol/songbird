@@ -7,7 +7,6 @@ import 'package:songbird/main.dart';
 import 'package:songbird/pages/likes_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:dots_indicator/dots_indicator.dart';
 
 class ArtistProfilePage extends StatefulWidget
 {

@@ -30,19 +30,21 @@ class _ProfilePageState extends State<ProfilePage> {
   
   @override
   Widget build(BuildContext context) {
-    
-    return Scaffold(
-      body: ListView(
-        padding: EdgeInsets.zero,
-        children: <Widget>[
-          buildCoverAndProfile(),
-          buildContent(),
-          SizedBox(height: 30),
-        ],
-      ),
+    return MaterialApp(
+      home: Scaffold(
+        body: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            buildCoverAndProfile(),
+            isArtist ? buildArtistStats() : buildListenerStats(),
+            SizedBox(height: 20),
+            isArtist ? buildSocialMediaSection() : SizedBox(),
+          ],
+        ),
+      )
     );
   }
-
+  
   Widget buildCoverAndProfile() {
     final top = coverHeight - profileHeight /2;
     final bottom = profileHeight / 2;
@@ -79,26 +81,104 @@ class _ProfilePageState extends State<ProfilePage> {
     backgroundImage: NetworkImage(profilePic),
   );
 
-  Widget buildContent() => Column(
+  Widget buildListenerStats() => Column(
     children: [
-      const SizedBox(height: 8),
-      Text(
-        CURRENT_USER.username,
-        style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-      ),
-      const SizedBox(height: 2),
-      Text(
-        isArtist ? CURRENT_USER.description : "",
-        style: TextStyle(color: Colors.grey.shade700)
-      ),
-      const SizedBox(height: 2),
-      Text(
-        isArtist ? 'Artist' : 'Listener',
-        style: TextStyle(color: Colors.grey.shade700)
-      ),
-      const SizedBox(height: 20),
 
-      isArtist ? buildSocialMediaSection() : SizedBox()
+      const SizedBox(height: 8),
+      //Username
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            CURRENT_USER.username,
+            style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+          ),
+          IconButton(
+            icon: Icon(Icons.edit, size: 25),
+            color: Colors.grey.shade700,
+            onPressed: () {
+              showEditDialog(context, CURRENT_USER.username, 'username');
+            },
+          ),
+        ],
+      ),
+      const SizedBox(height: 2),
+  
+      //Listener Text
+      Text(
+        'Listener',
+        style: TextStyle(color: Colors.grey.shade700)
+      ),
+    ],
+  );
+
+  Widget buildArtistStats() => Column(
+    children: [
+      Text(
+        'Artist',
+        style: TextStyle(color: Colors.grey.shade800)
+      ),
+      const SizedBox(height: 8),
+      //Username
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            CURRENT_USER.username,
+            style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+          ),
+          IconButton(
+            icon: Icon(Icons.edit, size: 25),
+            color: Colors.grey.shade700,
+            onPressed: () {
+              showEditDialog(context, CURRENT_USER.username, 'username');
+            },
+          ),
+        ],
+      ),
+      
+      //Artist Text
+      
+      const SizedBox(height: 2),
+
+      //Description
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            CURRENT_USER.description,
+            style: TextStyle(color: Colors.grey.shade700, fontSize: 15)
+          ),
+          IconButton(
+            icon: Icon(Icons.edit, size: 15),
+            color: Colors.grey.shade700,
+            onPressed: () {
+              showEditDialog(context, CURRENT_USER.description, 'description');
+            },
+          ),
+        ],
+      ),
+      const SizedBox(height: 2),
+      
+      //Likes Counter
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            CURRENT_USER.likesCounter.toString() + (" Likes"),
+            style: TextStyle(color: Colors.grey.shade700)
+          ),
+          Icon(
+            Icons.favorite_border,
+            color: Colors.red.shade500,
+            size: 20,
+          )
+        ],
+      ),
+      const SizedBox(height: 2),
+      
+      
+      const SizedBox(height: 20),
     ],
   );
 
@@ -112,7 +192,7 @@ class _ProfilePageState extends State<ProfilePage> {
       buildSocialIcon(FontAwesomeIcons.instagram, ""), //implement insta link
       const SizedBox(height: 12),
       buildSocialIcon(FontAwesomeIcons.youtube, CURRENT_USER.youtubeLink),
-
+      SizedBox(height: 30),
     ],
   );
 
@@ -138,7 +218,7 @@ class _ProfilePageState extends State<ProfilePage> {
         SizedBox(width: 10),
         TextButton.icon(
           onPressed: (){
-            showEditDialog(context, link);
+            showEditDialog(context, link, 'link');
           }, 
           icon: Icon(Icons.edit, color: Colors.grey.shade500),
           label: Text(
@@ -150,19 +230,19 @@ class _ProfilePageState extends State<ProfilePage> {
     ),
   );
 
-  void showEditDialog(BuildContext context, String currentLink) {
-    final TextEditingController linkController = TextEditingController(text: currentLink);
+  void showEditDialog(BuildContext context, String currentText, String field) {
+    final TextEditingController controller = TextEditingController(text: currentText);
 
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Edit Link"),
+          title: Text("Edit ${field == 'username' ? 'Username' : field == 'description' ? 'Description' : 'Link'}"),
           content: TextField(
-            controller: linkController,
+            controller: controller,
             decoration: InputDecoration(
-              labelText: "Link",
-              hintText: "Enter new link",
+              labelText: field == 'username' ? 'Username' : field == 'description' ? 'Description' : 'Link',
+              hintText: "Enter new ${field == 'username' ? 'username' : field == 'description' ? 'description' : 'link'}",
             ),
           ),
           actions: <Widget>[
@@ -176,9 +256,26 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Text("Save"),
               onPressed: () {
                 setState(() {
-                  // Update the link with the new value
-                  //CURRENT_USER.updateLink(linkController.text);
-                  print(linkController.text);
+                  switch (field) {
+                    case 'username':
+                      CURRENT_USER.username = controller.text;
+                      break;
+                    case 'description':
+                      CURRENT_USER.description = controller.text;
+                      break;
+                    case 'spotifyLink':
+                      CURRENT_USER.spotifyLink = controller.text;
+                      break;
+                    case 'appleMusicLink':
+                      CURRENT_USER.appleMusicLink = controller.text;
+                      break;
+                    case 'instagramLink':
+                      CURRENT_USER.instagramLink = controller.text;
+                      break;
+                    case 'youtubeLink':
+                      CURRENT_USER.youtubeLink = controller.text;
+                      break;
+                  }
                 });
                 Navigator.of(context).pop();
               },
