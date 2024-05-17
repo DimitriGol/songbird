@@ -208,7 +208,7 @@ class _SignupSurveyPageState extends State<SignupSurveyPage> {
       tasteTrackerMap[genre] = 1;
     }
 
-    uploadUserToFirestore(userType, userID, widget.username, "", likedArtistMap, tasteTrackerMap, _description.text, _spotifyLink.text, _appleMusicLink.text, _youtubeLink.text);
+    uploadUserToFirestore(userType, userID, widget.username, "", likedArtistMap, tasteTrackerMap, _description.text, _spotifyLink.text, _appleMusicLink.text, _youtubeLink.text, 1);
 
     //Navigate to the home page
     Navigator.pushNamed(context, "/home");

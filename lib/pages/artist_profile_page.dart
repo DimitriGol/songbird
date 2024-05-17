@@ -7,7 +7,6 @@ import 'package:songbird/main.dart';
 import 'package:songbird/pages/likes_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:dots_indicator/dots_indicator.dart';
 
 class ArtistProfilePage extends StatefulWidget
 {
@@ -121,33 +120,29 @@ class _ArtistProfilePageState extends State<ArtistProfilePage> {
                                                 margin: EdgeInsets.symmetric(horizontal: 5.0),
                                                 decoration: BoxDecoration(
                                                   image: DecorationImage(
-                                                    image: AssetImage('lib/images/sunset.png'),
+                                                    image: NetworkImage('lib/images/carousel_card_background.png'),
                                                     fit: BoxFit.cover,
+                                                    opacity: 0.9,
                                                     ),
                                                   // color: Color.fromARGB(255, 255, 223, 83)
                                                 ),
-                                                child: Center(
-                                                  child: Stack(
-                                                    children: [
-                                                     Text(
-                                                        snippet.key,
-                                                        style: TextStyle(
-                                                          fontSize: 15,
-                                                          foreground: Paint()
-                                                            ..style = PaintingStyle.stroke
-                                                            ..strokeWidth = 2
-                                                            ..color = Color.fromARGB(255, 0, 0, 0),
+                                                child: Center(                                                    
+                                                  child: Text(
+                                                    snippet.key,
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                      fontSize: 25,
+                                                      color: Color.fromARGB(255, 255, 255, 255),
+                                                      fontWeight: FontWeight.bold,
+                                                      shadows: [
+                                                        Shadow(
+                                                          offset: Offset(2.0, 2.0), // Adjust the offset to control the position of the shadow
+                                                          blurRadius: 3.0, // Adjust the blur radius to control the blur of the shadow
+                                                          color: Color.fromARGB(255, 0, 0, 0), // Adjust the color to control the color of the shadow
                                                         ),
-                                                      ),
-                                                      // Solid text as fill.
-                                                      Text(
-                                                        snippet.key,
-                                                        style: TextStyle(
-                                                          fontSize: 15,
-                                                          color: Color.fromARGB(255, 255, 255, 255),
-                                                        ),
-                                                      ),
-                                                                                    ]),
+                                                      ],
+                                                    ),
+                                                  ),
                                                 ),
                                               ),
                                               onTap: () {
