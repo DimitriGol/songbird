@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:songbird/database_management/database_funcs.dart';
 import 'package:songbird/main.dart';
 import 'package:songbird/classes/users.dart' as Users;
 import 'package:spotify/spotify.dart' as Spotify;
@@ -20,7 +21,7 @@ class _ProfilePageState extends State<ProfilePage> {
   final double profileHeight = 145;
   late bool isArtist;
   late String profilePic;
-  
+
   @override
   void initState(){
     super.initState();
@@ -32,7 +33,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: ListView(
+        body:ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
             buildCoverAndProfile(),
@@ -258,21 +259,27 @@ class _ProfilePageState extends State<ProfilePage> {
                 setState(() {
                   switch (field) {
                     case 'username':
+                      profilePageUpdateLinks(field, controller.text);
                       CURRENT_USER.username = controller.text;
                       break;
                     case 'description':
+                      profilePageUpdateLinks(field, controller.text);
                       CURRENT_USER.description = controller.text;
                       break;
                     case 'spotifyLink':
+                      profilePageUpdateLinks(field, controller.text);
                       CURRENT_USER.spotifyLink = controller.text;
                       break;
                     case 'appleMusicLink':
+                      profilePageUpdateLinks(field, controller.text);
                       CURRENT_USER.appleMusicLink = controller.text;
                       break;
                     case 'instagramLink':
+                      //profilePageUpdateLinks(field, controller.text);
                       CURRENT_USER.instagramLink = controller.text;
                       break;
                     case 'youtubeLink':
+                      profilePageUpdateLinks(field, controller.text);
                       CURRENT_USER.youtubeLink = controller.text;
                       break;
                   }
