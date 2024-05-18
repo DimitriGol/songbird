@@ -174,3 +174,15 @@ void decrementLikeCounter(String artistUUID) async {
     }
   });
 }
+
+void profilePageUpdateLinks(String spotifyLink, String appleMusicLink, String youtubeLink, String description) async {
+
+  final firestore = FirebaseFirestore.instance;
+  DocumentReference userDocRef = firestore.collection("artists").doc(CURRENT_USER.uuid);
+  userDocRef.update({
+    "description" : description,
+    "spotify_link" : spotifyLink,
+    "apple_music_link": appleMusicLink,
+    "youtube_link" : youtubeLink
+    });
+}
