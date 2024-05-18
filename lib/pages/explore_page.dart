@@ -160,16 +160,15 @@ class _ExplorePageState extends State<ExplorePage> {
                               SizedBox(height: 8),
                               Card(
                                 shape:StadiumBorder(),
-                              child: ListTile(
-                                shape:StadiumBorder(),
-                                tileColor: Color.fromARGB(255, 124, 77, 235),
-                                title: Text("About Me", style: GoogleFonts.chakraPetch(textStyle: TextStyle(fontSize: 18,fontWeight: FontWeight.bold, color: Colors.white)),),
-                                subtitle: Text(artistData["description"],
-                                //textAlign: TextAlign.center,
-                                style: GoogleFonts.chakraPetch(textStyle: description, fontStyle: FontStyle.italic),),
+                                child: ListTile(
+                                  shape:StadiumBorder(),
+                                  tileColor: Color.fromARGB(255, 124, 77, 235),
+                                  title: Text("About Me", style: GoogleFonts.chakraPetch(textStyle: TextStyle(fontSize: 18,fontWeight: FontWeight.bold, color: Colors.white)),),
+                                  subtitle: Text(artistData["description"],
+                                  //textAlign: TextAlign.center,
+                                  style: GoogleFonts.chakraPetch(textStyle: description, fontStyle: FontStyle.italic),),
                                 )
-                                
-                                ),
+                              ),
                       
                               SizedBox(height: 8),
                             
@@ -195,7 +194,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                                 margin: EdgeInsets.symmetric(horizontal: 5.0),
                                                 decoration: BoxDecoration(
                                                   image: DecorationImage(
-                                                    image: AssetImage('lib/images/carousel_card_background.png'),
+                                                    image: NetworkImage('lib/images/carousel_card_background.png'),
                                                     fit: BoxFit.cover,
                                                     opacity: 0.9,
                                                     ),
