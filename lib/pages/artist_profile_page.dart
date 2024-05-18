@@ -80,9 +80,7 @@ class _ArtistProfilePageState extends State<ArtistProfilePage> {
                               children: [
                                 buildSocialIcon(FontAwesomeIcons.spotify, artistData["spotify_link"]),
                                 const SizedBox(width: 12),
-                                buildSocialIcon(FontAwesomeIcons.apple, artistData["apple_link"]),
-                                const SizedBox(width: 12),
-                                buildSocialIcon(FontAwesomeIcons.instagram, artistData["instagram_link"]),
+                                buildSocialIcon(FontAwesomeIcons.apple, artistData["apple_music_link"]),
                                 const SizedBox(width: 12),
                                 buildSocialIcon(FontAwesomeIcons.youtube, artistData["youtube_link"]),
                               ],
@@ -208,7 +206,7 @@ class _ArtistProfilePageState extends State<ArtistProfilePage> {
   }
 
   Widget buildSocialIcon(IconData icon, String? link) {
-    final bool isLinkAvailable = link != null && link.isNotEmpty;
+    final bool isLinkAvailable = (link != null) && (link.isNotEmpty);
 
     return CircleAvatar(
       radius: 25,
@@ -220,7 +218,7 @@ class _ArtistProfilePageState extends State<ArtistProfilePage> {
         child: InkWell(
           onTap: isLinkAvailable
               ? () {
-                  launchUrl(Uri.parse(link!));
+                  launchUrl(Uri.parse(link));
                 }
               : null,
           child: Center(
