@@ -175,35 +175,14 @@ void decrementLikeCounter(String artistUUID) async {
   });
 }
 
-void profilePageUpdateLinks(String field, String content) async {
+void profilePageUpdateLinks(String spotifyLink, String appleMusicLink, String youtubeLink, String description) async {
 
   final firestore = FirebaseFirestore.instance;
   DocumentReference userDocRef = firestore.collection("artists").doc(CURRENT_USER.uuid);
-  switch (field) {
-    case 'username':
-      userDocRef.update({
-        "username" : content
-      });
-      break;
-    case 'description':
-      userDocRef.update({
-        "description" : content
-      });
-      break;
-    case 'spotifyLink':
-      userDocRef.update({
-        "spotify_link" : content
-      });
-      break;
-    case 'appleMusicLink':
-      userDocRef.update({
-        "apple_music_link" : content
-      });
-      break;
-    case 'youtubeLink':
-      userDocRef.update({
-        "youtube_link" : content
-      });
-      break;
-    }
+  userDocRef.update({
+    "description" : description,
+    "spotify_link" : spotifyLink,
+    "apple_music_link": appleMusicLink,
+    "youtube_link" : youtubeLink
+    });
 }
