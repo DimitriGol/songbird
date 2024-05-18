@@ -44,6 +44,7 @@ class SpotifyHelper
   late final String clientSecret;
   late final String redirectURI;
   late final spotify_api.SpotifyApi spotify;
+  String? refreshToken;
   Function(Uri responseUri)? handleAuthorizationCallback;
 
 
@@ -53,9 +54,9 @@ class SpotifyHelper
   SpotifyHelper() 
   {
     clientID = dotenv.env['CLIENT_ID']!;
+    clientSecret = dotenv.env['CLIENT_SECRET']!;
     redirectURI = 'https://www.google.com';
     spotify = spotify_api.SpotifyApi(spotify_api.SpotifyApiCredentials(clientID, ''));
-    clientSecret = dotenv.env['CLIENT_SECRET']!;
   }
 
   Future<void> authorize() async 
@@ -65,7 +66,6 @@ class SpotifyHelper
     '&client_id=$clientID' +
     '&scope=user-read-email,user-library-read' +
     '&redirect_uri=$redirectURI';
-
 
      await launchUrlString(authUri);
   }
@@ -83,17 +83,18 @@ class SpotifyHelper
     
     if (accessToken != null) {
       // Use the access token to make authorized requests to the Spotify API
-      var authenticatedSpotify = spotify_api.SpotifyApi(spotify_api.SpotifyApiCredentials(clientID, clientSecret ));
-      var holder = spotify_api.SpotifyApiCredentials.withAccessToken(accessToken);
+      var authenticatedSpotify = spotify_api.SpotifyApi(spotify_api.SpotifyApiCredentials.withAccessToken(accessToken));
+      //var authenticatedSpotify = spotify_api.SpotifyApi(spotify_api.SpotifyApiCredentials(clientID, clientSecret ));
+      //var holder = spotify_api.SpotifyApiCredentials.withAccessToken(accessToken);
 
       // Example: Fetch user profile
       try {
 
         final userProfile = await authenticatedSpotify.me.get();
-        print('User profile: $userProfile');
+        print('User profile: ${userProfile.displayName}');
         
       } catch (e) {
-        print(e);
+        print('Error Printing User profile: $e');
       }
 
 
