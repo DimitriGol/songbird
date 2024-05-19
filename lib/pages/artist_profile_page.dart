@@ -109,7 +109,7 @@ class _ArtistProfilePageState extends State<ArtistProfilePage> {
                                             margin: EdgeInsets.symmetric(horizontal: 5.0),
                                             decoration: BoxDecoration(
                                               image: DecorationImage(
-                                                image: NetworkImage('lib/images/carousel_card_background.png'),
+                                                image: AssetImage('lib/images/carousel_card_background.png'),
                                                 fit: BoxFit.cover,
                                                 opacity: 0.9,
                                               ),
