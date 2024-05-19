@@ -1,7 +1,14 @@
 # Songbird 
-<img width="300" alt="Songbird" src="https://github.com/DimitriGol/songbird/blob/main/lib/images/songbird_white_logo_and_text.png">
-Created by Dylan Deokinandan, Steven Marte, Fayyaad Hassan, and Dimitri Golyshev
+<p align="center">
+  <img height="300" alt="Songbird" src="https://github.com/DimitriGol/songbird/blob/main/lib/images/songbird_logo_yellowbg.png">
+  <div align="center">
+    Created by Dylan Deokinandan, Steven Marte, Fayyaad Hassan, and Dimitri Golyshev
+  </div>
+</p>
 
+
+
+## About Us
 Songbird is an application designed for small music artists to build a following. The app allows users to provide a link to their Spotify accounts, which allows the application to retrieve and display their information. Artists are able to be discovered by new listeners and added to their likes page. A user's likes page allows them to see artists they were previously fond of and view them on other provided platforms. 
 
 
