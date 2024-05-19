@@ -102,26 +102,29 @@ class _SignUpPageState extends State<SignUpPage> {
               SizedBox(
                 height: 20,
               ),
-              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                Text("Already have an account?"),
-                SizedBox(
-                  width: 5,
-                ),
-                InkWell(
-                    onTap: () {
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(builder: (context) => LoginPage()),
-                        (route) => false,
-                      );
-                    },
-                    child: Text("Log In",
-                        style: TextStyle(
-                          color: Colors.yellow,
-                          fontWeight: FontWeight.bold,
-                          //decoration: TextDecoration.underline,decorationColor: Colors.white, decorationThickness: 2 //THIS UNDERLINES LOG IN
-                        )))
-              ])
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center, 
+                children: [
+                  Text("Already have an account?"),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  InkWell(
+                      onTap: () {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (context) => LoginPage()),
+                          (route) => false,
+                        );
+                      },
+                      child: Text("Log In",
+                          style: TextStyle(
+                            color: Colors.yellow,
+                            fontWeight: FontWeight.bold,
+                            //decoration: TextDecoration.underline,decorationColor: Colors.white, decorationThickness: 2 //THIS UNDERLINES LOG IN
+                          )))
+                ]
+              )
             ],
           ),
         ));

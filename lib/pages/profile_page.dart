@@ -39,19 +39,17 @@ class _ProfilePageState extends State<ProfilePage> {
   
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body:ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            buildCoverAndProfile(),
-            isArtist ? buildArtistStats() : buildListenerStats(),
-            SizedBox(height: 20),
-            isArtist ? buildSocialMediaSection() : SizedBox(),
-            //ElevatedButton(onPressed: onPressed, child: child)
-          ],
-        ),
-      )
+    return Scaffold(
+      body:ListView(
+        padding: EdgeInsets.zero,
+        children: <Widget>[
+          buildCoverAndProfile(),
+          isArtist ? buildArtistStats() : buildListenerStats(),
+          SizedBox(height: 20),
+          isArtist ? buildSocialMediaSection() : SizedBox(),
+          //ElevatedButton(onPressed: onPressed, child: child)
+        ],
+      ),
     );
   }
   
@@ -154,6 +152,20 @@ class _ProfilePageState extends State<ProfilePage> {
             size: 20,
           )
         ],
+      ),
+      SizedBox(height: 10),
+      ElevatedButton.icon(
+        onPressed: () {
+          launchUrl(Uri.parse(CURRENT_USER.spotifyLink));
+        },
+        icon: Icon(FontAwesomeIcons.spotify, color: Colors.black),
+        label: Text(
+          'View Spotify',
+          style: TextStyle(color: Colors.black),
+        ),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.yellow,
+        ),
       ),      
       
       const SizedBox(height: 20),
@@ -223,23 +235,6 @@ class _ProfilePageState extends State<ProfilePage> {
               isPasswordField: false,
             ),
           ),
-        ],
-      ),
-      const SizedBox(height: 12),
-
-      // Update Spotify Link
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          buildSocialIcon(FontAwesomeIcons.spotify, CURRENT_USER.spotifyLink),
-          Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: FormContainerWidget(
-                      controller: _spotifyLinkController,
-                      hintText: (CURRENT_USER.spotifyLink.length > 0) ? CURRENT_USER.spotifyLink : "Add a Spotify Link!",
-                      isPasswordField: false,
-                    ),
-                  ),
         ],
       ),
       const SizedBox(height: 12),
