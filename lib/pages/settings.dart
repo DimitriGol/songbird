@@ -66,33 +66,7 @@ class _SettingsPageState extends State<SettingsPage> {
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-           ElevatedButton(
-              onPressed: () {
-              //do something
-              },
-              child: Text('Dummy Button', style: TextStyle(color: Colors.white),),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 25, 79, 104),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                    minimumSize: Size(300, 50),
-              )
-             ) ,
 
-             SizedBox(height: 10),//for spacing
-
-             ElevatedButton(
-              onPressed: () {
-              //do something
-              },
-              child: Text('Dummy Button\'s Brother', style: TextStyle(color: Colors.white),),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 137, 208, 241),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                    minimumSize: Size(300, 50),
-              )
-             ) ,
-
-             SizedBox(height: 10), // for spacing
 
             ElevatedButton.icon(
               onPressed: () {
