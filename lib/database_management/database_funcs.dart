@@ -4,7 +4,7 @@ import 'package:songbird/classes/users.dart';
 import 'package:songbird/main.dart';
 import 'dart:collection';
 
-void uploadUserToFirestore(String userType, String uuid, String username, String profilePicture, LinkedHashMap<String, bool> likedArtists, Map<String, int> tasteTracker, String description, String spotifyLink, String appleMusicLink, String youtubeLink, int likesCounter) async{
+void uploadUserToFirestore(String userType, String uuid, String username, String profilePicture, LinkedHashMap<String, bool> likedArtists, Map<String, int> tasteTracker, String description, String spotifyLink, String appleMusicLink, String youtubeLink) async{
     final firestore = FirebaseFirestore.instance;
 
     final SpotifyHelp = SpotifyHelper();
@@ -13,7 +13,7 @@ void uploadUserToFirestore(String userType, String uuid, String username, String
     profilePicture = SpotifyHelp.imageUrl;
     try {
       if(userType == 'Artist'){
-        CURRENT_USER = Artist(uuid: uuid, username: username, profilePicture: profilePicture, likedArtists: likedArtists, tasteTracker: tasteTracker, spotifyLink: spotifyLink, appleMusicLink: appleMusicLink, youtubeLink: youtubeLink, description: description, snippets: SpotifyHelp.trackMaps, likesCounter: likesCounter);
+        CURRENT_USER = Artist(uuid: uuid, username: username, profilePicture: profilePicture, likedArtists: likedArtists, tasteTracker: tasteTracker, spotifyLink: spotifyLink, appleMusicLink: appleMusicLink, youtubeLink: youtubeLink, description: description, snippets: SpotifyHelp.trackMaps, likesCounter: 0);
         DocumentReference userDocRef = firestore.collection("artists").doc(uuid);
         await userDocRef.set({
         'liked_artists': CURRENT_USER.likedArtists,

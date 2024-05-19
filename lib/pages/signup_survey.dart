@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:songbird/main.dart';
 import 'package:songbird/pages/signup_survey.dart';
 import 'package:songbird/widgets/form_container_widget.dart';
@@ -9,6 +8,7 @@ import 'login.dart';
 import 'package:songbird/classes/users.dart';
 import 'package:songbird/database_management/database_funcs.dart';
 import 'dart:collection';
+import 'package:songbird/pages/splash_screen.dart';
 
 class SignupSurveyPage extends StatefulWidget {
   const SignupSurveyPage({super.key, required this.username});
@@ -22,16 +22,14 @@ class _SignupSurveyPageState extends State<SignupSurveyPage> {
   List<String> selectedGenres = [];
   String userType = '';
   String userID = (FirebaseAuth.instance.currentUser?.uid)!;
-  //LinkedHashMap<String, bool> likedArtistMap;
   var likedArtistMap = LinkedHashMap<String, bool>();
-  Map<String, int> tasteTrackerMap = {"CLASSICAL": 0, "COUNTRY": 0, "EDM": 0, "HIPHOP": 0, "HOUSE": 0, "POP": 0, "RAP": 0, "R&B" : 0, "ROCK": 0};
+  Map<String, int> tasteTrackerMap = {"CLASSICAL": 0, "COUNTRY": 0, "EDM": 0, "HIPHOP": 0, "HOUSE": 0, "POP": 0, "RAP": 0, "R&B": 0, "ROCK": 0};
 
   // Extra data members for Artist class 
   TextEditingController _description = TextEditingController();
   TextEditingController _spotifyLink = TextEditingController();
   TextEditingController _appleMusicLink = TextEditingController();
   TextEditingController _youtubeLink = TextEditingController();
-
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +45,6 @@ class _SignupSurveyPageState extends State<SignupSurveyPage> {
             Text(
               'Select your three favorite genres:',
               style: TextStyle(fontSize: 20, color: Colors.white),
-              
             ),
             SizedBox(height: 20),
             Wrap(
@@ -126,9 +123,7 @@ class _SignupSurveyPageState extends State<SignupSurveyPage> {
         });
       },
       style: ButtonStyle(
-        backgroundColor: isSelected
-            ? MaterialStateProperty.all(Colors.yellow)
-            : null,
+        backgroundColor: isSelected ? MaterialStateProperty.all(Colors.yellow) : null,
       ),
       child: Text(type),
     );
@@ -144,7 +139,6 @@ class _SignupSurveyPageState extends State<SignupSurveyPage> {
             hintText: "Tell Us About Yourself", //implement character limit later
           ),
         ),
-        // Spotify Link
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: FormContainerWidget(
@@ -152,66 +146,62 @@ class _SignupSurveyPageState extends State<SignupSurveyPage> {
             hintText: "Spotify Link",
           ),
         ),
-        // //Apple Music Link
-        // Padding(
-        //   padding: const EdgeInsets.all(8.0),
-        //   child: FormContainerWidget(
-        //     controller: _appleMusicLink,
-        //     hintText: "Apple Music Link",
-        //   ),
-        // ),
-        // // Youtube Link
-        // Padding(
-        //   padding: const EdgeInsets.all(8.0),
-        //   child: FormContainerWidget(
-        //     controller: _youtubeLink,
-        //     hintText: "Youtube Link",
-        //   ),
-        // ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: FormContainerWidget(
+            controller: _appleMusicLink,
+            hintText: "Apple Music Link",
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: FormContainerWidget(
+            controller: _youtubeLink,
+            hintText: "YouTube Link",
+          ),
+        ),
       ],
     );
   }
 
   void _submitQuestionnaire() {
-    // (uncomment this when the implementation is created to make the user an ARTIST if user selects Artist)
-    // // Update CURRENT_USER's data members if they login as an Artist 
-    // CURRENT_USER.description = _description;
-    // CURRENT_USER.spotifyLink = _spotifyLink;
-    // CURRENT_USER.appleMusicLink = _appleMusicLink;
-    // CURRENT_USER.youtubeLink = _youtubeLink;
 
-    // update CURRENT_USER's taste tracker and print it out
-    // for (int i=0; i<selectedGenres.length; i++){
-    //   String genre = selectedGenres[i].toUpperCase();
-      
-    //   CURRENT_USER.tasteTracker[genre] += 1;
-    // }
-    // print('Taste Tracker' + CURRENT_USER.tasteTracker);
-    
-    // print('Description' + _description.text);
-    // print('Links:\n' + _spotifyLink.text + '\n' + _appleMusicLink.text + '\n' + _youtubeLink.text);
-    
-    // Print out selected genres and user type
-    print('Selected Genres: $selectedGenres');
-    print('User Type: $userType');
+    if (userType == 'Artist' && (_description.text.isEmpty || _spotifyLink.text.isEmpty)) {
+      _showErrorDialog('Description and Spotify link are mandatory for artists.');
+      return;
+    }
 
-    //print user's info
-    // print('Username:' + CURRENT_USER.username);
-    // print('Description:' + CURRENT_USER.description);
-    // print('Spotify Link:' + CURRENT_USER.spotifyLink);
-    // print('Apple Music Link' + CURRENT_USER.appleMusicLink);
-    // print('Youtube Link' + CURRENT_USER.youtubeLink);
-
-    for (int i=0; i<selectedGenres.length; i++){
+    for (int i = 0; i < selectedGenres.length; i++) {
       String genre = selectedGenres[i].toUpperCase();
-      
       tasteTrackerMap[genre] = 1;
     }
 
-    uploadUserToFirestore(userType, userID, widget.username, "", likedArtistMap, tasteTrackerMap, _description.text, _spotifyLink.text, _appleMusicLink.text, _youtubeLink.text, 1);
+    uploadUserToFirestore(userType, userID, widget.username, "", likedArtistMap, tasteTrackerMap, _description.text, _spotifyLink.text, _appleMusicLink.text, _youtubeLink.text);
 
-    //Navigate to the home page
-    Navigator.pushNamed(context, "/home");
+    // Navigate to the home page
+    Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => SplashScreen(toExplorePage: true)),
+          );
+  }
 
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
