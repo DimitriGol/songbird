@@ -1,4 +1,4 @@
-import 'dart:html';
+//import 'dart:html';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -75,7 +75,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget buildCoverImage() => Container(
     color: Colors.grey,
-    child: Image.network(
+    child: Image.asset(
       'lib/images/sunset.png',
       width: double.infinity,
       height: coverHeight,
@@ -86,7 +86,8 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget buildProfileImage() => CircleAvatar(
     radius: profileHeight / 2,
     backgroundColor: Colors.grey.shade200,
-    backgroundImage: NetworkImage(profilePic),
+    foregroundImage: NetworkImage(profilePic),
+    backgroundImage: AssetImage(profilePic),
   );
 
   Widget buildListenerStats() => Column(
