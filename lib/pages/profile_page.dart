@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:songbird/database_management/database_funcs.dart';
@@ -18,7 +20,7 @@ class ProfilePage extends StatefulWidget
 
 class _ProfilePageState extends State<ProfilePage> {
   final double coverHeight = 200;
-  final double profileHeight = 145;
+  final double profileHeight = 175;
   late bool isArtist;
   late String profilePic;
   //static final GlobalKey<FormState> myFormKey = GlobalKey<FormState>();
@@ -26,6 +28,7 @@ class _ProfilePageState extends State<ProfilePage> {
   TextEditingController _youtubeLinkController = TextEditingController();
   TextEditingController _appleLinkController = TextEditingController();
   TextEditingController _descriptionController = TextEditingController();
+  TextEditingController _usernameController = TextEditingController();
 
   @override
   void initState(){
@@ -75,7 +78,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget buildCoverImage() => Container(
     color: Colors.grey,
     child: Image.network(
-      'https://images.unsplash.com/photo-1485579149621-3123dd979885?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fG11c2ljfGVufDB8fDB8fHww',
+      'lib/images/sunset.png',
       width: double.infinity,
       height: coverHeight,
       fit: BoxFit.cover,
@@ -100,13 +103,6 @@ class _ProfilePageState extends State<ProfilePage> {
             CURRENT_USER.username,
             style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
           ),
-          // IconButton(
-          //   icon: Icon(Icons.edit, size: 25),
-          //   color: Colors.grey.shade700,
-          //   onPressed: () {
-          //     showEditDialog(context, CURRENT_USER.username, 'username');
-          //   },
-          // ),
         ],
       ),
       const SizedBox(height: 2),
@@ -126,22 +122,11 @@ class _ProfilePageState extends State<ProfilePage> {
         style: TextStyle(color: Colors.grey.shade800)
       ),
       const SizedBox(height: 8),
+      
       //Username
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            CURRENT_USER.username,
-            style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-          ),
-          // IconButton(
-          //   icon: Icon(Icons.edit, size: 25),
-          //   color: Colors.grey.shade700,
-          //   onPressed: () {
-          //     showEditDialog(context, CURRENT_USER.username, 'username');
-          //   },
-          // ),
-        ],
+      Text(
+        CURRENT_USER.username,
+        style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
       ),
       
       //Artist Text
@@ -149,21 +134,9 @@ class _ProfilePageState extends State<ProfilePage> {
       const SizedBox(height: 2),
 
       //Description
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            CURRENT_USER.description,
-            style: TextStyle(color: Colors.grey.shade700, fontSize: 15)
-          ),
-          // IconButton(
-          //   icon: Icon(Icons.edit, size: 15),
-          //   color: Colors.grey.shade700,
-          //   onPressed: () {
-          //     showEditDialog(context, CURRENT_USER.description, 'description');
-          //   },
-          // ),
-        ],
+      Text(
+        CURRENT_USER.description,
+        style: TextStyle(color: Colors.grey.shade700, fontSize: 15)
       ),
       const SizedBox(height: 2),
       
@@ -181,9 +154,7 @@ class _ProfilePageState extends State<ProfilePage> {
             size: 20,
           )
         ],
-      ),
-      const SizedBox(height: 2),
-      
+      ),      
       
       const SizedBox(height: 20),
     ],
@@ -192,69 +163,162 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget buildSocialMediaSection() => Column(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
-      Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: FormContainerWidget(
-        controller: _descriptionController,
-          hintText: "Update Your Description!",
-          isPasswordField: false,
+      Text(
+        'Update Your Info Below!',
+        style: TextStyle(
+          color: Colors.black,
+
+        ),
+      ),
+      const SizedBox(height: 12),
+
+      //Update Username
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircleAvatar(
+            radius: 30,
+            backgroundColor: Colors.yellow,
+            child: Material(
+              shape: CircleBorder(),
+              clipBehavior: Clip.hardEdge,
+              color: Colors.transparent,
+              child: InkWell(
+                child: Center(child: Icon(Icons.person, size: 35)),//does nothing at the moment
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: FormContainerWidget(
+            controller: _usernameController,
+              hintText: "Update Your Username!",
+              isPasswordField: false,
+            ),
+          ),
+        ],
+      ),
+      const SizedBox(height: 12),
+      // Update Description
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircleAvatar(
+            radius: 30,
+            backgroundColor: Colors.yellow,
+            child: Material(
+              shape: CircleBorder(),
+              clipBehavior: Clip.hardEdge,
+              color: Colors.transparent,
+              child: InkWell(
+                child: Center(child: Icon(Icons.edit_note_sharp, size: 35)),//does nothing at the moment
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: FormContainerWidget(
+            controller: _descriptionController,
+              hintText: "Update Your Description!",
+              isPasswordField: false,
+            ),
+          ),
+        ],
+      ),
+      const SizedBox(height: 12),
+
+      // Update Spotify Link
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          buildSocialIcon(FontAwesomeIcons.spotify, CURRENT_USER.spotifyLink),
+          Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: FormContainerWidget(
+                      controller: _spotifyLinkController,
+                      hintText: (CURRENT_USER.spotifyLink.length > 0) ? CURRENT_USER.spotifyLink : "Add a Spotify Link!",
+                      isPasswordField: false,
+                    ),
+                  ),
+        ],
+      ),
+      const SizedBox(height: 12),
+
+      // Update Apple Music Link
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          buildSocialIcon(FontAwesomeIcons.apple, CURRENT_USER.appleMusicLink),
+          Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: FormContainerWidget(
+                      controller: _appleLinkController,
+                      hintText: (CURRENT_USER.appleMusicLink.length > 0) ? CURRENT_USER.appleMusicLink : "Add an Apple Music Link!",
+                      isPasswordField: false,
+                    ),
+                  ),
+        ],
+      ),
+      const SizedBox(height: 12),
+
+      // Update Youtube Link
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          buildSocialIcon(FontAwesomeIcons.youtube, CURRENT_USER.youtubeLink),
+          Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: FormContainerWidget(
+                      controller: _youtubeLinkController,
+                      hintText: (CURRENT_USER.youtubeLink.length > 0) ? CURRENT_USER.youtubeLink : "Add a Youtube Link!",
+                      isPasswordField: false,
+                    ),
+                  ),
+        ],
+      ),
+      SizedBox(height: 10),
+
+      // Update Button
+      FilledButton.tonal(
+        onPressed: () {
+          if(_spotifyLinkController.text == ""){
+            _spotifyLinkController.text = CURRENT_USER.spotifyLink;
+          }
+          if(_youtubeLinkController.text == ""){
+            _youtubeLinkController.text = CURRENT_USER.youtubeLink;
+          }
+          if(_appleLinkController.text == ""){
+            _appleLinkController.text = CURRENT_USER.appleMusicLink;
+          }
+          if(_descriptionController.text == ""){
+            _descriptionController.text = CURRENT_USER.description;
+          }
+          if(_usernameController.text == ""){
+            _usernameController.text = CURRENT_USER.username;
+          }
+          CURRENT_USER.spotifyLink = _spotifyLinkController.text;
+          CURRENT_USER.youtubeLink = _youtubeLinkController.text;
+          CURRENT_USER.appleMusicLink = _appleLinkController.text;
+          CURRENT_USER.description = _descriptionController.text;
+          CURRENT_USER.username = _usernameController.text;
+          profilePageUpdateLinks(_spotifyLinkController.text, _appleLinkController.text, _youtubeLinkController.text, _descriptionController.text, _usernameController.text);
+          setState(() {});
+        },
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all<Color>(Colors.yellow),
+          foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
+          shadowColor: MaterialStateProperty.all<Color>(Colors.black),
+          padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.symmetric(vertical: 20.0, horizontal: 40.0)),
+          textStyle: MaterialStateProperty.all<TextStyle>(TextStyle(fontWeight: FontWeight.bold, fontSize: 15.0)),
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(40.0),
+            ),
           ),
         ),
-      buildSocialIcon(FontAwesomeIcons.spotify, CURRENT_USER.spotifyLink),
-      Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: FormContainerWidget(
-                  controller: _spotifyLinkController,
-                  hintText: CURRENT_USER.spotifyLink,
-                  isPasswordField: false,
-                ),
-              ),
-      const SizedBox(height: 12),
-      buildSocialIcon(FontAwesomeIcons.apple, CURRENT_USER.appleMusicLink),
-      Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: FormContainerWidget(
-                  controller: _appleLinkController,
-                  hintText: CURRENT_USER.appleMusicLink,
-                  isPasswordField: false,
-                ),
-              ),
-      const SizedBox(height: 12),
-      // buildSocialIcon(FontAwesomeIcons.instagram, ""), //implement insta link
-      // const SizedBox(height: 12),
-      buildSocialIcon(FontAwesomeIcons.youtube, CURRENT_USER.youtubeLink),
-      Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: FormContainerWidget(
-                  controller: _youtubeLinkController,
-                  hintText: CURRENT_USER.youtubeLink,
-                  isPasswordField: false,
-                ),
-              ),
-      //SizedBox(height: 30),
-      FilledButton.tonal(
-                  onPressed: () {
-                    if(_spotifyLinkController.text == ""){
-                      _spotifyLinkController.text = CURRENT_USER.spotifyLink;
-                    }
-                    if(_youtubeLinkController.text == ""){
-                      _youtubeLinkController.text = CURRENT_USER.youtubeLink;
-                    }
-                    if(_appleLinkController.text == ""){
-                      _appleLinkController.text = CURRENT_USER.appleMusicLink;
-                    }
-                    if(_descriptionController.text == ""){
-                      _descriptionController.text = CURRENT_USER.description;
-                    }
-                    CURRENT_USER.spotifyLink = _spotifyLinkController.text;
-                    CURRENT_USER.youtubeLink = _youtubeLinkController.text;
-                    CURRENT_USER.appleMusicLink = _appleLinkController.text;
-                    CURRENT_USER.description = _descriptionController.text;
-                    profilePageUpdateLinks(_spotifyLinkController.text, _appleLinkController.text, _youtubeLinkController.text, _descriptionController.text);
-                    setState(() {});
-                  },
-                  child: const Text('Update!'),
-                ),
+        child: const Text('Update!', style: TextStyle(fontWeight: FontWeight.bold)),
+      ),
+      SizedBox(height: 30),
     ],
   );
 
@@ -263,7 +327,7 @@ class _ProfilePageState extends State<ProfilePage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         CircleAvatar(
-          radius: 35,
+          radius: 30,
           backgroundColor: Colors.yellow,
           child: Material(
             shape: CircleBorder(),
@@ -277,80 +341,9 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
         ),
-        // SizedBox(width: 10),
-        // TextButton.icon(
-        //   onPressed: (){
-        //     showEditDialog(context, link, 'link');
-        //     print('built');
-        //   }, 
-        //   icon: Icon(Icons.edit, color: Colors.grey.shade500),
-        //   label: Text(
-        //     "Edit Link", 
-        //     style: TextStyle(color: Colors.grey.shade500),
-        //   ),
-        // ), 
       ]
     ),
   );
-
-//   void showEditDialog(BuildContext context, String currentText, String field) {
-//     final TextEditingController controller = TextEditingController(text: currentText);
-
-//     showDialog(
-//       context: context,
-//       builder: (BuildContext context) {
-//         return AlertDialog(
-//           title: Text("Edit ${field == 'username' ? 'Username' : field == 'description' ? 'Description' : 'Link'}"),
-//           content: TextField(
-//             key: myFormKey,
-//             controller: controller,
-//             decoration: InputDecoration(
-//               labelText: field == 'username' ? 'Username' : field == 'description' ? 'Description' : 'Link',
-//               hintText: "Enter new ${field == 'username' ? 'username' : field == 'description' ? 'description' : 'link'}",
-//             ),
-//           ),
-//           actions: <Widget>[
-//             TextButton(
-//               child: Text("Cancel"),
-//               onPressed: () {
-//                 Navigator.of(context).pop();
-//               },
-//             ),
-//             TextButton(
-//               child: Text("Save"),
-//               onPressed: () {
-//                 //print(field);
-//                 setState(() {
-//                   print(field);
-//                   switch (field) {
-//                     case 'username':
-//                       CURRENT_USER.username = controller.text;
-//                       break;
-//                     case 'description':
-//                       CURRENT_USER.description = controller.text;
-//                       break;
-//                     case 'spotifyLink':
-//                       CURRENT_USER.spotifyLink = controller.text;
-//                       break;
-//                     case 'appleMusicLink':
-//                       CURRENT_USER.appleMusicLink = controller.text;
-//                       break;
-//                     case 'instagramLink':
-//                       CURRENT_USER.instagramLink = controller.text;
-//                       break;
-//                     case 'youtubeLink':
-//                       CURRENT_USER.youtubeLink = controller.text;
-//                       break;
-//                   }
-//                 });
-//                 Navigator.of(context).pop();
-//               },
-//             ),
-//           ],
-//         );
-//       },
-//     );
-//   }
  }
 
 
